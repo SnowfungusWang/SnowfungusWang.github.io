@@ -159,6 +159,127 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-MVVM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/04/MVVM/">MVVM</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/04/MVVM/" class="archive-article-date">
+  	<time datetime="2020-03-04T15:26:58.215Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h1><h2 id="0-看的博客"><a href="#0-看的博客" class="headerlink" title="0. 看的博客"></a>0. 看的博客</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p><a href="https://www.cnblogs.com/onepixel/p/6034307.html" target="_blank" rel="noopener">https://www.cnblogs.com/onepixel/p/6034307.html</a></p>
+<h4 id="1-MVVM-是什么"><a href="#1-MVVM-是什么" class="headerlink" title="1. MVVM 是什么"></a>1. MVVM 是什么</h4><p>Model 层代表数据模型，也可以在Model中定义数据修改和操作的业务逻辑；View 代表UI 组件，它负责将数据模型转化成UI 展现出来，ViewModel 是一个同步View 和 Model的对象。</p>
+<p>在MVVM架构下，<strong>View 和 Model 之间并没有直接的联系，而是通过ViewModel进行交互，Model 和 ViewModel 之间的交互是双向的</strong></p>
+<p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来，而View 和 Model 之间的同步工作完全是自动的，无需人为干涉，因此开发者只需关注业务逻辑，不需要手动操作DOM, 不需要关注数据状态的同步问题，复杂的数据状态维护完全由 MVVM 来统一管理。</p>
+<h4 id="2-Vue细节"><a href="#2-Vue细节" class="headerlink" title="2. Vue细节"></a>2. Vue细节</h4><p>Vue.js 是<strong>采用 Object.defineProperty 的 getter 和 setter，并结合观察者模式来实现数据绑定</strong>的。当把一个普通 Javascript 对象传给 Vue 实例来作为它的 data 选项时，<strong>Vue 将遍历它的属性，用 Object.defineProperty 将它们转为 getter/setter</strong>。用户看不到 getter/setter，但是在内部它们让 Vue 追踪依赖，在属性被访问和修改时通知变化。</p>
+<h4 id="3-Vue实现部件"><a href="#3-Vue实现部件" class="headerlink" title="3. Vue实现部件"></a>3. Vue实现部件</h4><p><strong>Observer</strong> 数据监听器，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者，内部采用Object.defineProperty的getter和setter来实现。</p>
+<p><strong>Compile</strong> 指令解析器，对每个元素节点的指令进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数。</p>
+<p><strong>Watcher</strong> 订阅者， 作为连接 Observer 和 Compile 的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数。</p>
+<p><strong>Dep</strong> 消息订阅器，内部维护了一个数组，用来收集订阅者（Watcher），数据变动触发notify 函数，再调用订阅者的 update 方法。</p>
+<h4 id="4"><a href="#4" class="headerlink" title="4. ????"></a>4. ????</h4><ol>
+<li>Complier???</li>
+<li>数据劫持</li>
+</ol>
+<h3 id="2-简单-理解"><a href="#2-简单-理解" class="headerlink" title="2. ==简单==理解"></a>2. ==简单==理解</h3><p><a href="https://zhuanlan.zhihu.com/p/38296857" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/38296857</a></p>
+<h4 id="1-ViewModel"><a href="#1-ViewModel" class="headerlink" title="1. ViewModel"></a>1. ViewModel</h4><p>业务逻辑层，View需要什么数据，ViewModel要提供这个数据；View有某些操作，ViewModel就要响应这些操作，所以可以说它是Model for View.</p>
+<ul>
+<li>双向传递数据–数据属性和data binding，</li>
+<li>单向传递操作–命令属性。</li>
+</ul>
+<h2 id="Bonus"><a href="#Bonus" class="headerlink" title="Bonus"></a>Bonus</h2><h3 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h3><ol>
+<li><p><code>Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。</p>
+</li>
+<li><p>函数签名：<code>Object.defineProperty(obj, prop, descriptor)</code>要在其上定义属性的对象。</p>
+<ul>
+<li><code>obj</code>：要在其上定义属性的对象</li>
+<li><code>prop</code>：要定义或修改的属性的名称</li>
+<li><code>descriptor</code>：将被定义或修改的属性描述符</li>
+<li>返回：<code>obj</code></li>
+</ul>
+</li>
+<li><p>属性描述符：</p>
+<ul>
+<li><p>数据描述符：</p>
+<ul>
+<li><code>configurable</code>：当且仅当该属性的 configurable 为 true 时，该属性<code>描述符</code>才能够被改变，同时该属性也能从对应的对象上被删除。</li>
+<li><code>enumerable</code>：当且仅当该属性的 configurable 为 true 时，该属性才能够出现在对象的枚举属性中。<ul>
+<li>就是能不能被<code>for……in</code>和<code>Object.keys()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>数据描述符可选</p>
+<ul>
+<li><code>value</code>：该属性对应的值。</li>
+<li><code>writable</code>：为true，value才能被赋值运算符改变。</li>
+</ul>
+</li>
+<li><p>存取描述符可选</p>
+<ul>
+<li><code>get</code>：一个给属性提供 getter 的方法，如果没有 getter 则为 <code>undefined</code>。当<strong>访问该属性</strong>时，该方法会被执行，方法执行时没有参数传入，但是会传入<code>this</code>对象（由于继承关系，这里的<code>this</code>并不一定是定义该属性的对象）。</li>
+<li><code>set</code>：一个给属性提供 setter 的方法，如果没有 setter 则为 <code>undefined</code>。当<strong>属性值修改时，触发执行该方法</strong>。该方法将接受唯一参数，即该属性新的参数值。</li>
+</ul>
+</li>
+<li><p>这俩可选不能同时出现</p>
+</li>
+</ul>
+</li>
+<li></li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/04/MVVM/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-微软" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

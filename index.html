@@ -191,118 +191,10 @@
 <p><strong>先注释再代码</strong></p>
 <p><strong>以及学一下java</strong></p>
 <p>最重要的是！！！！！一定要稳住！！！！！！！！！！！！！！</p>
-<h2 id="2-问题记录"><a href="#2-问题记录" class="headerlink" title="2. 问题记录"></a>2. 问题记录</h2><ol>
-<li><strong>**</strong>介绍项目<strong>**</strong></li>
-<li>你自己实现的难点和亮点</li>
-<li>栈和队列的原理实现</li>
-<li>散列表的原理和实现：</li>
-<li>树的遍历方式：深度（前中后）、广度</li>
-<li>多态的实现</li>
-<li>数据库连接的类型：问题都听错你可行了姐妹</li>
-<li>内连接外连接和条件连接</li>
-<li>反转链表</li>
-<li>算法题：字符串匹配，大小写可以不敏感，然后不能使用底层函数，自己写用例，不能使用KMS（我寻思着你让我写我也不一定能写啊）<ul>
-<li>sb错误多到飞起，下周就去刷字符串的算法</li>
-</ul>
-</li>
-</ol>
-<h2 id="3-反思"><a href="#3-反思" class="headerlink" title="3. 反思"></a>3. 反思</h2><ol>
-<li>感觉反而比一面紧张得多，我自杀</li>
-<li>就，稳住，真的稳住，没啥好丢人的</li>
-<li>写算法的时候不用强行互动，想干啥干啥</li>
-<li>如果是那种边界和逻辑不是很明确的，先写注释</li>
-<li>别紧张，真的别紧张</li>
-</ol>
-<h2 id="4-错题本"><a href="#4-错题本" class="headerlink" title="4. 错题本"></a>4. 错题本</h2><ol>
-<li><p>等等他问的是哪个数据库连接？？？？</p>
-</li>
-<li><p>表连接的方式(JOIN)：就是在笛卡尔积里筛</p>
-<img src="/home/mush/blog/source/imgs/表的连接1.jpg" style="zoom:67%;" />
-
-<ul>
-<li>内连接：<ul>
-<li>两个表的属性会直接拼接起来。</li>
-<li>没有条件就是笛卡尔积</li>
-<li>包括：<ul>
-<li>等值连接：连接条件是等号，找条件的交集。<ul>
-<li><strong>包括重复列</strong></li>
-<li><code>SELECT * from Table_A A JOIN Table_B B ON A.id = B.id</code></li>
-</ul>
-</li>
-<li>不等连接：一个个做比较，所有满足条件的全部返回。</li>
-<li>自然连接：删除连接表中的复列。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>外连接：能匹配就匹配，不能匹配就取空<ul>
-<li>分左右</li>
-<li>匹配条件是匹配的和全部的左/右</li>
-<li>另一个里没有的用空值填充</li>
-</ul>
-</li>
-<li>交叉连接：不带where，返回笛卡尔积。（就是内连接不带条件）</li>
-<li><strong>在连接查询中，通常不用 WHERE 而是用 ON，因为 WHERE 没有 ON 效率高。</strong></li>
-</ul>
-</li>
-<li><p>数据库连接（好多，当听一乐了）：</p>
-<ul>
-<li>ODBC即<strong>开放式数据库互连</strong><ul>
-<li>本质上是一组数据库访问API（应用程序编程接口），由一组函数调用组成，核心是SQL语句</li>
-</ul>
-</li>
-<li>OLE DB即<strong>数据库链接和嵌入对象</strong>（Object Linking and Embedding DataBase）。<ul>
-<li><strong>提供一种相同的访问接口，使得数据的使用者(应用程序)可以使用同样的方法访问各种数据，而不用考虑数据的具体存储地点、格式或类型</strong></li>
-</ul>
-</li>
-<li>JDBC（Java Data Base Connectivity）一组Java语言编写的用于数据库连接和操作的类和接口，可为多种关系数据库提供统一的访问方式。通过JDBC完成对数据库的访问包括四个主要组件：Java应用程序、JDBC驱动器管理器、驱动器和数据源。</li>
-</ul>
-</li>
-<li><p><strong>散列表</strong>（<strong>Hash table</strong>，也叫<strong>哈希表</strong>），是根据键（Key）而直接访问在内存储存位置的数据结构。它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。</p>
-<ul>
-<li>散列函数：直接定址、数字分析、平方取中、折叠、随机数、取模</li>
-<li>处理冲突：开放定址（探测）、单独链表、双散列、再散列</li>
-</ul>
-</li>
-<li><p>翻转链表：</p>
-<ul>
-<li>递归：遍历至结尾，再往前</li>
-<li>非递归：多加一个存储</li>
-</ul>
-</li>
-<li><p>多态的实现：</p>
-<ul>
-<li>Java：方法表，指向具体的方向地址。<ul>
-<li>存在优化</li>
-</ul>
-</li>
-<li>C++：虚函数表</li>
-</ul>
-</li>
-<li><p>算法题：</p>
-<ul>
-<li><p>思路是硬凑的</p>
-</li>
-<li><p>不要怕边界条件，写一下就行（记得准备好用的笔</p>
-</li>
-<li><p>没找出来、没反应及时的bug：</p>
-<ul>
-<li>字符串，不是只有字母啊你个zz</li>
-<li>判断nullptr，边界条件</li>
-<li>没搜到的判定</li>
-<li>大小写转换</li>
-</ul>
-</li>
-<li><p>一个猜想：是不是想我把模式匹配作为基础实现正则啊</p>
-</li>
-<li><p>代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindString</span><span class="params">(<span class="keyword">char</span>* source, <span class="keyword">char</span>* pattern, <span class="keyword">bool</span> caseInsensitive)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//大小写敏感</span></span><br><span class="line">    <span class="keyword">if</span>(source==<span class="literal">nullptr</span> || pattern==<span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">0</span>; </span><br><span class="line">	<span class="keyword">if</span>(!caseInsensive)&#123;</span><br><span class="line">        <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(;i&lt; source.length();i++)&#123;</span><br><span class="line">            <span class="comment">//整个pattern比完</span></span><br><span class="line">            <span class="keyword">if</span>(pos==pattern.length()) <span class="keyword">return</span> i-pos;</span><br><span class="line">            <span class="keyword">if</span>(getLower(source[i])==getLower(pattern[pos]))&#123;</span><br><span class="line">                pos++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                i=i-pos;</span><br><span class="line">                pos=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt; source.length() ;i++)&#123;</span><br><span class="line">            <span class="comment">//整个pattern比完</span></span><br><span class="line">            <span class="keyword">if</span>(pos==pattern.length()) <span class="keyword">return</span> i-pos;</span><br><span class="line">            <span class="keyword">if</span>(source[i]==pattern[pos])&#123;</span><br><span class="line">                pos++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                i=i-pos;</span><br><span class="line">                pos=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pos!=pattern.length())&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i-pos;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="literal">nullptr</span>, <span class="string">"abfd"</span> <span class="literal">true</span></span><br><span class="line"><span class="string">"a"</span> , <span class="literal">nullptr</span>, <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="literal">nullptr</span>, <span class="string">""</span> </span><br><span class="line"></span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"a"</span> <span class="literal">false</span> </span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"AA"</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"ac"</span> <span class="literal">false</span></span><br><span class="line"><span class="string">"aaaa"</span>  <span class="string">"aA"</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="string">"dsfaa@#$dq34  dsfawqerr;"</span> <span class="string">"fawqeRr;"</span> <span class="literal">true</span>/<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="string">"aaaa"</span> <span class="string">"aaab"</span> <span class="literal">true</span>/<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getLen</span><span class="params">(<span class="keyword">char</span>* str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(str==<span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> l=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(str[l]!=<span class="string">'\0'</span>)&#123;</span><br><span class="line">        l++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> <span class="title">getLower</span><span class="params">(<span class="keyword">char</span> cur)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(cur&gt;=<span class="string">'A'</span> &amp;&amp; cur&lt;=<span class="string">'Z'</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> cur+<span class="string">'a'</span>-<span class="string">'A'</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getLowerStr</span><span class="params">(<span class="keyword">char</span>* str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="built_in">strlen</span>(str); i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(str[i]&gt;=<span class="string">'A'</span>&amp;&amp;str[i]&lt;=<span class="string">'Z'</span>)&#123;</span><br><span class="line">            str[i]=getLower(str[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-</li>
-</ol>
-
+<h2 id="2-问题记录"><a href="#2-问题记录" class="headerlink" title="2. 问题记录"></a>2. 问题记录</h2>
+        
+          <a class="article-more-a" href="/2020/03/06/%E5%87%89%E5%87%892.0/#more">more >></a>
+        
       
 
       
@@ -368,86 +260,9 @@
 <h4 id="1-MVVM-是什么"><a href="#1-MVVM-是什么" class="headerlink" title="1. MVVM 是什么"></a>1. MVVM 是什么</h4><p>Model 层代表数据模型，也可以在Model中定义数据修改和操作的业务逻辑；View 代表UI 组件，它负责将数据模型转化成UI 展现出来，ViewModel 是一个同步View 和 Model的对象。</p>
 <p>在MVVM架构下，<strong>View 和 Model 之间并没有直接的联系，而是通过ViewModel进行交互，Model 和 ViewModel 之间的交互是双向的</strong></p>
 <p>ViewModel 通过双向数据绑定把 View 层和 Model 层连接了起来，而View 和 Model 之间的同步工作完全是自动的，无需人为干涉，因此开发者只需关注业务逻辑，不需要手动操作DOM, 不需要关注数据状态的同步问题，复杂的数据状态维护完全由 MVVM 来统一管理。</p>
-<h4 id="2-Vue细节"><a href="#2-Vue细节" class="headerlink" title="2. Vue细节"></a>2. Vue细节</h4><p>Vue.js 是采用 <strong>Object.defineProperty(数据劫持)</strong> 的 getter 和 setter，并结合观察者模式来实现数据绑定的。当把一个普通 Javascript 对象传给 Vue 实例来作为它的 data 选项时，<strong>Vue 将遍历它的属性，用 Object.defineProperty 将它们转为 getter/setter</strong>。用户看不到 getter/setter，但是在内部它们让 Vue 追踪依赖，在属性被访问和修改时通知变化。</p>
-<h4 id="3-Vue实现部件"><a href="#3-Vue实现部件" class="headerlink" title="3. Vue实现部件"></a>3. Vue实现部件</h4><ul>
-<li><p><strong>Observer</strong> ：<strong>负责劫持</strong>数据监听器，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者，内部采用Object.defineProperty的getter和setter来实现。</p>
-</li>
-<li><p><strong>Compile</strong>：<strong>把数据编译成我们想要的样子，编译的模板</strong> 指令解析器，对每个元素节点的指令进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数。</p>
-</li>
-<li><p><strong>Watcher</strong> 订阅者， 作为连接 Observer 和 Compile 的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数。</p>
-</li>
-<li><p><strong>Dep</strong> 消息订阅器，内部维护了一个数组，用来收集订阅者（Watcher），数据变动触发notify 函数，再调用订阅者的 update 方法。</p>
-</li>
-</ul>
-<h4 id="4"><a href="#4" class="headerlink" title="4. ????"></a>4. ????</h4><ol>
-<li>Complier???</li>
-<li>数据劫持</li>
-</ol>
-<h3 id="2-代码"><a href="#2-代码" class="headerlink" title="2. 代码"></a>2. 代码</h3><p><a href="https://zhuanlan.zhihu.com/p/38296857" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/38296857</a></p>
-<h4 id="1-ViewModel"><a href="#1-ViewModel" class="headerlink" title="1. ViewModel"></a>1. ViewModel</h4><p>业务逻辑层，View需要什么数据，ViewModel要提供这个数据；View有某些操作，ViewModel就要响应这些操作，所以可以说它是Model for View.</p>
-<ul>
-<li>双向传递数据–数据属性和data binding，</li>
-<li>单向传递操作–命令属性。</li>
-</ul>
-<h4 id="2-自己实现MVVM"><a href="#2-自己实现MVVM" class="headerlink" title="2. 自己实现MVVM"></a>2. 自己实现MVVM</h4><p><img src="/home/mush/Desktop/v2-1a9fa8eaf0bff07a0b0db9a9632376e8_r.jpg" alt=""></p>
-<ol>
-<li>大体结构：分别写模板编译Compile( )和数据劫持Observer( )，最后靠MVVM( )来整合。</li>
-<li>DOM操作频繁带来的性能损耗：先把这些需要操作的真实DOM移入到内存中（文档碎片 fragement），此时移除的DOM不在页面上了，操作完后再把编译好的DOM放回页面（操作内存是不会导致页面的重绘重渲染的）</li>
-<li>TODO：好长的代码，有空拿完整的2小时敲一遍吧（那我为啥不去看vue源码）</li>
-</ol>
-<h2 id="1-我的理解"><a href="#1-我的理解" class="headerlink" title="1. 我的理解"></a>1. 我的理解</h2><ol>
-<li>VM，model for view，数据双向传递，命令单向传递。</li>
-<li>有四个部分，<ol>
-<li>Observer：靠数据劫持（defineProperty）把所有正常的object加一层getter和setter，来捕获对数据的操作。</li>
-<li>Watcher（订阅者）：连接OC，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数。</li>
-<li>Dep：Watcher的集合，消息订阅器。数据变动触发里面的notify函数，然后调用watcher的update。</li>
-<li>complier：指令编译器，对DOM进行扫描解析，然后订阅相应的watcher来更新视图。</li>
-</ol>
-</li>
-<li>更新流程：数据变化——Observer的setter触发——Dep.notify（）——Watcher.update（）</li>
-<li></li>
-</ol>
-<h2 id="Bonus"><a href="#Bonus" class="headerlink" title="Bonus"></a>Bonus</h2><h3 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h3><ol>
-<li><p><code>Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。</p>
-</li>
-<li><p>函数签名：<code>Object.defineProperty(obj, prop, descriptor)</code>要在其上定义属性的对象。</p>
-<ul>
-<li><code>obj</code>：要在其上定义属性的对象</li>
-<li><code>prop</code>：要定义或修改的属性的名称</li>
-<li><code>descriptor</code>：将被定义或修改的属性描述符</li>
-<li>返回：<code>obj</code></li>
-</ul>
-</li>
-<li><p>属性描述符：</p>
-<ul>
-<li><p>数据描述符：</p>
-<ul>
-<li><code>configurable</code>：当且仅当该属性的 configurable 为 true 时，该属性<code>描述符</code>才能够被改变，同时该属性也能从对应的对象上被删除。</li>
-<li><code>enumerable</code>：当且仅当该属性的 configurable 为 true 时，该属性才能够出现在对象的枚举属性中。<ul>
-<li>就是能不能被<code>for……in</code>和<code>Object.keys()</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>数据描述符可选</p>
-<ul>
-<li><code>value</code>：该属性对应的值。</li>
-<li><code>writable</code>：为true，value才能被赋值运算符改变。</li>
-</ul>
-</li>
-<li><p>存取描述符可选</p>
-<ul>
-<li><code>get</code>：一个给属性提供 getter 的方法，如果没有 getter 则为 <code>undefined</code>。当<strong>访问该属性</strong>时，该方法会被执行，方法执行时没有参数传入，但是会传入<code>this</code>对象（由于继承关系，这里的<code>this</code>并不一定是定义该属性的对象）。</li>
-<li><code>set</code>：一个给属性提供 setter 的方法，如果没有 setter 则为 <code>undefined</code>。当<strong>属性值修改时，触发执行该方法</strong>。该方法将接受唯一参数，即该属性新的参数值。</li>
-</ul>
-</li>
-<li><p>这俩可选不能同时出现</p>
-</li>
-</ul>
-</li>
-<li></li>
-</ol>
-
+        
+          <a class="article-more-a" href="/2020/03/04/MVVM/#more">more >></a>
+        
       
 
       
@@ -523,43 +338,9 @@
 </li>
 <li>没啥准备，但是没有</li>
 </ol>
-<h2 id="2-陆神的建议"><a href="#2-陆神的建议" class="headerlink" title="2. 陆神的建议"></a>2. 陆神的建议</h2><ol>
-<li>没听说过的名词不一定要说完全不造啥的，就是提一点边界的，或者“是什么呀”</li>
-<li>写测试用例</li>
-</ol>
-<h2 id="3-问题记录"><a href="#3-问题记录" class="headerlink" title="3. 问题记录"></a>3. 问题记录</h2><ol>
-<li>为什么学前端：没有答得特别好</li>
-<li>前端要有哪些知识</li>
-<li>vue的MVVM</li>
-<li>vue-router</li>
-<li>组件间通讯</li>
-<li>算法题：扫雷<ul>
-<li>扫雷判断展开的逻辑（DFS的时间和空间复杂度</li>
-<li>扫雷生成棋盘</li>
-<li>n维（没写，就问了一下：n维）</li>
-</ul>
-</li>
-</ol>
-<h2 id="4-个人感觉"><a href="#4-个人感觉" class="headerlink" title="4. 个人感觉"></a>4. 个人感觉</h2><ol>
-<li>真的，为啥我要学前端，前端的学习路线是啥，前端应该掌握点啥</li>
-<li>Vue还是不熟</li>
-<li>React得学一下</li>
-<li>说话慢一点，别太紧张，脑子里过一下，来得及的</li>
-<li>写算法的话，不要太着急，要看看屏幕，变量名别选的太长，但别用单字母<ul>
-<li>改用Java刷叭</li>
-</ul>
-</li>
-<li>不用考虑垃圾回收啥的，多问问题，别慌</li>
-<li>微软是以算法为主的，问题不会很深入。</li>
-</ol>
-<h2 id="5-很多？？？"><a href="#5-很多？？？" class="headerlink" title="5. 很多？？？"></a>5. 很多？？？</h2><ol>
-<li>MVVM</li>
-<li>View的数据管理</li>
-<li>C++ vector内部会被回收吗？</li>
-<li>前端的垃圾回收</li>
-<li>内存泄漏</li>
-</ol>
-
+        
+          <a class="article-more-a" href="/2020/03/04/%E5%BE%AE%E8%BD%AF/#more">more >></a>
+        
       
 
       
@@ -707,48 +488,10 @@
 <li>面试官人很好，还带讲题的</li>
 <li>基础不牢地动山摇【文艺摇头.gif】</li>
 </ol>
-<h2 id="1-面试题总结"><a href="#1-面试题总结" class="headerlink" title="1. 面试题总结"></a>1. 面试题总结</h2><ol>
-<li>跨域解释、同源解释</li>
-<li>跨域的影响和解决</li>
-<li>CDN（大佬讲了一下）<ul>
-<li>==？==</li>
-<li>跨域的理由引出来的</li>
-</ul>
-</li>
-<li>umi框架和vue框架的使用感区别（瞎答的）</li>
-<li>吹了一波umi的bug</li>
-<li>讲了很多umi的东西</li>
-<li>代码题：<ul>
-<li>js：判断是不是array（？）</li>
-<li>算法：判断版本号新旧<ul>
-<li>伪码</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>vue的框架原理：劫持怎么做的？</li>
-<li>event loop（？）<ol>
-<li>宏任务和微任务</li>
-</ol>
-</li>
-<li>MVVM和MVC</li>
-<li>为什么不学react</li>
-<li>token<ul>
-<li>sso</li>
-</ul>
-</li>
-<li>css居中、flex布局、bootstrap原理</li>
-</ol>
-<h2 id="2-要学的东西"><a href="#2-要学的东西" class="headerlink" title="2. 要学的东西"></a>2. 要学的东西</h2><ol>
-<li>js基础</li>
-<li>css基础</li>
-<li>webpack</li>
-<li>跨域的原理</li>
-<li>框架的原理</li>
-<li>dva、redux</li>
-<li>MVC、MVVM、MVP</li>
-</ol>
-<h2 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h2>
+<h2 id="1-面试题总结"><a href="#1-面试题总结" class="headerlink" title="1. 面试题总结"></a>1. 面试题总结</h2>
+        
+          <a class="article-more-a" href="/2020/03/03/%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%9D%A2%E8%AF%95/#more">more >></a>
+        
       
 
       

@@ -159,6 +159,191 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-凉凉2.0" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/06/%E5%87%89%E5%87%892.0/">凉凉2.0</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/06/%E5%87%89%E5%87%892.0/" class="archive-article-date">
+  	<time datetime="2020-03-06T07:40:27.861Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="微软2-0"><a href="#微软2-0" class="headerlink" title="微软2.0"></a>微软2.0</h1><h2 id="1-害"><a href="#1-害" class="headerlink" title="1. 害"></a>1. 害</h2><p>害！！！</p>
+<p>我杀我自己</p>
+<p>就紧张的飞起</p>
+<p>可能还是前面快问快答的时候有点那个，就过于紧张，再加上表连接害不熟悉</p>
+<p>这不就紧张的飞起来了吗</p>
+<p>然后网还不行</p>
+<p>就双重凉凉</p>
+<p><strong>下次拿个好使的笔和纸来写叭</strong></p>
+<p>难受</p>
+<p><strong>先注释再代码</strong></p>
+<p><strong>以及学一下java</strong></p>
+<p>最重要的是！！！！！一定要稳住！！！！！！！！！！！！！！</p>
+<h2 id="2-问题记录"><a href="#2-问题记录" class="headerlink" title="2. 问题记录"></a>2. 问题记录</h2><ol>
+<li><strong>**</strong>介绍项目<strong>**</strong></li>
+<li>你自己实现的难点和亮点</li>
+<li>栈和队列的原理实现</li>
+<li>散列表的原理和实现：</li>
+<li>树的遍历方式：深度（前中后）、广度</li>
+<li>多态的实现</li>
+<li>数据库连接的类型：问题都听错你可行了姐妹</li>
+<li>内连接外连接和条件连接</li>
+<li>反转链表</li>
+<li>算法题：字符串匹配，大小写可以不敏感，然后不能使用底层函数，自己写用例，不能使用KMS（我寻思着你让我写我也不一定能写啊）<ul>
+<li>sb错误多到飞起，下周就去刷字符串的算法</li>
+</ul>
+</li>
+</ol>
+<h2 id="3-反思"><a href="#3-反思" class="headerlink" title="3. 反思"></a>3. 反思</h2><ol>
+<li>感觉反而比一面紧张得多，我自杀</li>
+<li>就，稳住，真的稳住，没啥好丢人的</li>
+<li>写算法的时候不用强行互动，想干啥干啥</li>
+<li>如果是那种边界和逻辑不是很明确的，先写注释</li>
+<li>别紧张，真的别紧张</li>
+</ol>
+<h2 id="4-错题本"><a href="#4-错题本" class="headerlink" title="4. 错题本"></a>4. 错题本</h2><ol>
+<li><p>等等他问的是哪个数据库连接？？？？</p>
+</li>
+<li><p>表连接的方式(JOIN)：就是在笛卡尔积里筛</p>
+<img src="/home/mush/blog/source/imgs/表的连接1.jpg" style="zoom:67%;" />
+
+<ul>
+<li>内连接：<ul>
+<li>两个表的属性会直接拼接起来。</li>
+<li>没有条件就是笛卡尔积</li>
+<li>包括：<ul>
+<li>等值连接：连接条件是等号，找条件的交集。<ul>
+<li><strong>包括重复列</strong></li>
+<li><code>SELECT * from Table_A A JOIN Table_B B ON A.id = B.id</code></li>
+</ul>
+</li>
+<li>不等连接：一个个做比较，所有满足条件的全部返回。</li>
+<li>自然连接：删除连接表中的复列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>外连接：能匹配就匹配，不能匹配就取空<ul>
+<li>分左右</li>
+<li>匹配条件是匹配的和全部的左/右</li>
+<li>另一个里没有的用空值填充</li>
+</ul>
+</li>
+<li>交叉连接：不带where，返回笛卡尔积。（就是内连接不带条件）</li>
+<li><strong>在连接查询中，通常不用 WHERE 而是用 ON，因为 WHERE 没有 ON 效率高。</strong></li>
+</ul>
+</li>
+<li><p>数据库连接（好多，当听一乐了）：</p>
+<ul>
+<li>ODBC即<strong>开放式数据库互连</strong><ul>
+<li>本质上是一组数据库访问API（应用程序编程接口），由一组函数调用组成，核心是SQL语句</li>
+</ul>
+</li>
+<li>OLE DB即<strong>数据库链接和嵌入对象</strong>（Object Linking and Embedding DataBase）。<ul>
+<li><strong>提供一种相同的访问接口，使得数据的使用者(应用程序)可以使用同样的方法访问各种数据，而不用考虑数据的具体存储地点、格式或类型</strong></li>
+</ul>
+</li>
+<li>JDBC（Java Data Base Connectivity）一组Java语言编写的用于数据库连接和操作的类和接口，可为多种关系数据库提供统一的访问方式。通过JDBC完成对数据库的访问包括四个主要组件：Java应用程序、JDBC驱动器管理器、驱动器和数据源。</li>
+</ul>
+</li>
+<li><p><strong>散列表</strong>（<strong>Hash table</strong>，也叫<strong>哈希表</strong>），是根据键（Key）而直接访问在内存储存位置的数据结构。它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问记录，这加快了查找速度。</p>
+<ul>
+<li>散列函数：直接定址、数字分析、平方取中、折叠、随机数、取模</li>
+<li>处理冲突：开放定址（探测）、单独链表、双散列、再散列</li>
+</ul>
+</li>
+<li><p>翻转链表：</p>
+<ul>
+<li>递归：遍历至结尾，再往前</li>
+<li>非递归：多加一个存储</li>
+</ul>
+</li>
+<li><p>多态的实现：</p>
+<ul>
+<li>Java：方法表，指向具体的方向地址。<ul>
+<li>存在优化</li>
+</ul>
+</li>
+<li>C++：虚函数表</li>
+</ul>
+</li>
+<li><p>算法题：</p>
+<ul>
+<li><p>思路是硬凑的</p>
+</li>
+<li><p>不要怕边界条件，写一下就行（记得准备好用的笔</p>
+</li>
+<li><p>没找出来、没反应及时的bug：</p>
+<ul>
+<li>字符串，不是只有字母啊你个zz</li>
+<li>判断nullptr，边界条件</li>
+<li>没搜到的判定</li>
+<li>大小写转换</li>
+</ul>
+</li>
+<li><p>一个猜想：是不是想我把模式匹配作为基础实现正则啊</p>
+</li>
+<li><p>代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">FindString</span><span class="params">(<span class="keyword">char</span>* source, <span class="keyword">char</span>* pattern, <span class="keyword">bool</span> caseInsensitive)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//大小写敏感</span></span><br><span class="line">    <span class="keyword">if</span>(source==<span class="literal">nullptr</span> || pattern==<span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">0</span>; </span><br><span class="line">	<span class="keyword">if</span>(!caseInsensive)&#123;</span><br><span class="line">        <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(;i&lt; source.length();i++)&#123;</span><br><span class="line">            <span class="comment">//整个pattern比完</span></span><br><span class="line">            <span class="keyword">if</span>(pos==pattern.length()) <span class="keyword">return</span> i-pos;</span><br><span class="line">            <span class="keyword">if</span>(getLower(source[i])==getLower(pattern[pos]))&#123;</span><br><span class="line">                pos++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                i=i-pos;</span><br><span class="line">                pos=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> pos=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt; source.length() ;i++)&#123;</span><br><span class="line">            <span class="comment">//整个pattern比完</span></span><br><span class="line">            <span class="keyword">if</span>(pos==pattern.length()) <span class="keyword">return</span> i-pos;</span><br><span class="line">            <span class="keyword">if</span>(source[i]==pattern[pos])&#123;</span><br><span class="line">                pos++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                i=i-pos;</span><br><span class="line">                pos=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(pos!=pattern.length())&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> i-pos;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="literal">nullptr</span>, <span class="string">"abfd"</span> <span class="literal">true</span></span><br><span class="line"><span class="string">"a"</span> , <span class="literal">nullptr</span>, <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="literal">nullptr</span>, <span class="string">""</span> </span><br><span class="line"></span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"a"</span> <span class="literal">false</span> </span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"AA"</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="string">"aaa"</span>  <span class="string">"ac"</span> <span class="literal">false</span></span><br><span class="line"><span class="string">"aaaa"</span>  <span class="string">"aA"</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="string">"dsfaa@#$dq34  dsfawqerr;"</span> <span class="string">"fawqeRr;"</span> <span class="literal">true</span>/<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="string">"aaaa"</span> <span class="string">"aaab"</span> <span class="literal">true</span>/<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getLen</span><span class="params">(<span class="keyword">char</span>* str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(str==<span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> l=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(str[l]!=<span class="string">'\0'</span>)&#123;</span><br><span class="line">        l++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> l;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">char</span> <span class="title">getLower</span><span class="params">(<span class="keyword">char</span> cur)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(cur&gt;=<span class="string">'A'</span> &amp;&amp; cur&lt;=<span class="string">'Z'</span>)&#123;</span><br><span class="line">		<span class="keyword">return</span> cur+<span class="string">'a'</span>-<span class="string">'A'</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getLowerStr</span><span class="params">(<span class="keyword">char</span>* str)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="built_in">strlen</span>(str); i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(str[i]&gt;=<span class="string">'A'</span>&amp;&amp;str[i]&lt;=<span class="string">'Z'</span>)&#123;</span><br><span class="line">            str[i]=getLower(str[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/06/%E5%87%89%E5%87%892.0/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-MVVM" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

@@ -316,7 +316,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-11 00:19:53" itemprop="dateModified" datetime="2020-03-11T00:19:53+08:00">2020-03-11</time>
+                <time title="Modified: 2020-03-12 00:06:47" itemprop="dateModified" datetime="2020-03-12T00:06:47+08:00">2020-03-12</time>
               </span>
 
           
@@ -330,27 +330,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="this、call-、apply-、bind"><a href="#this、call-、apply-、bind" class="headerlink" title="this、call()、apply()、bind()"></a>this、call()、apply()、bind()</h1><p><strong>改变函数执行时的上下文</strong>，再具体一点就是<strong>改变函数运行时的this指向</strong>。</p>
-<h2 id="0-上下文和this"><a href="#0-上下文和this" class="headerlink" title="0. 上下文和this"></a>0. 上下文和this</h2><p>js有<strong>定义时上下文</strong>和<strong>运行时上下文</strong>。</p>
-<p>主要是this这个东西，它是很难搞的，在严格模式和非严格模式下也会有一点差别。</p>
-<h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><p>绝大多数情况，this的值是当前执行代码的环境对象。</p>
-<h4 id="全局环境"><a href="#全局环境" class="headerlink" title="全局环境"></a>全局环境</h4><p>不论是否是严格模式下，即在函数体外部，<code>this</code>都指向全局对象。</p>
-<h4 id="函数（运行内）环境"><a href="#函数（运行内）环境" class="headerlink" title="函数（运行内）环境"></a>函数（运行内）环境</h4><p>在函数内部，this的值取决于函数<strong>被调用的方式。</strong></p>
-<h5 id="简单调用"><a href="#简单调用" class="headerlink" title="简单调用"></a>简单调用</h5><ol>
-<li>非严格模式，this值不由该调用设置，<code>this</code>默认指向全局对象。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在浏览器中：</span></span><br><span class="line">f1() === <span class="built_in">window</span>;   <span class="comment">//在浏览器中，全局对象是window</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//在Node中：</span></span><br><span class="line">f1() === global;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>严格模式下，<code>this</code><strong>保持进入执行环境</strong>时的值</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"><span class="meta">  "use strict"</span>; <span class="comment">// 这里是严格模式</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f2() === <span class="literal">undefined</span>; <span class="comment">// true，被直接调用</span></span><br><span class="line"><span class="built_in">window</span>.f2()===<span class="built_in">window</span><span class="comment">//被window调用</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
+          <h1 id="this、call-、apply-、bind"><a href="#this、call-、apply-、bind" class="headerlink" title="this、call()、apply()、bind()"></a>this、call()、apply()、bind()</h1><p><strong>改变函数执行时的上下文</strong>，再具体一点就是改变函数运行时的this指向。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/10/this%E3%80%81call()%E3%80%81apply()%E3%80%81bind()/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

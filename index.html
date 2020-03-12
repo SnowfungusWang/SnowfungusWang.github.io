@@ -380,10 +380,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-08 23:09:59 / Modified: 23:10:40" itemprop="dateCreated datePublished" datetime="2020-03-08T23:09:59+08:00">2020-03-08</time>
+              <time title="Created: 2020-03-08 23:09:59" itemprop="dateCreated datePublished" datetime="2020-03-08T23:09:59+08:00">2020-03-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-12 22:40:48" itemprop="dateModified" datetime="2020-03-12T22:40:48+08:00">2020-03-12</time>
+              </span>
 
           
 
@@ -396,45 +402,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Echart-in-SE3-1"><a href="#Echart-in-SE3-1" class="headerlink" title="Echart in SE3_1"></a>Echart in SE3_1</h2><h3 id="tooltip"><a href="#tooltip" class="headerlink" title="tooltip"></a>tooltip</h3><p>​    可以自定义位置、内容，传入http元素</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">tooltip:&#123;</span><br><span class="line">  trigger:<span class="string">"item"</span>,</span><br><span class="line">  enterable:<span class="string">"ture"</span>,					<span class="comment">//鼠标是否可以进入。</span></span><br><span class="line">  confine:<span class="string">"ture"</span>,						</span><br><span class="line">  padding: <span class="number">10</span>,</span><br><span class="line">  backgroundColor: <span class="string">'#222'</span>,</span><br><span class="line">  borderColor: <span class="string">'#777'</span>,</span><br><span class="line">  borderWidth: <span class="number">1</span>,</span><br><span class="line">  extraCssText:<span class="string">'width:25em; white-space:pre-wrap'</span>,</span><br><span class="line">  formatter: <span class="function"><span class="keyword">function</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> au=obj.dataIndex;</span><br><span class="line">    <span class="keyword">let</span> paper=obj.componentIndex;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`&lt;div style="border-bottom: 1px solid rgba(255,255,255,.3);font-size: 22px;padding-bottom: 7px;margin-bottom: 7px"&gt;<span class="subst">$&#123;self.authors[au].papers[paper].title&#125;</span>&lt;/div&gt;&lt;div class="tool-content" style="font-size: 18px; text-align:left;"&gt;&lt;strong&gt;Author: &lt;/strong&gt;<span class="subst">$&#123;self.authors[au].papers[paper].authors&#125;</span>&lt;br /&gt;&lt;strong&gt;Year: &lt;/strong&gt;<span class="subst">$&#123;self.authors[au].papers[paper].year&#125;</span>&lt;br /&gt;&lt;strong&gt;Citation: &lt;/strong&gt;<span class="subst">$&#123;self.authors[au].papers[paper].citationCount&#125;</span>&lt;/div&gt;`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>trigger：不同图的类型可以是<code>item</code>或者<code>axis</code>，选择合适的属性值，可以使传入值变成图标对应的部分。</p>
-</li>
-<li><p>formatter：用来设定格式，可以是格式化字符串（不同的字符代表不同的数据部分）或者http元素。</p>
-<ul>
-<li>函数传入的内容是这部分的参数，如果你不加限制的话鼠标移动就会导致新的事件</li>
-<li>http元素的字符串不要乱打tab或者enter，会反映在tooltip。</li>
-</ul>
-</li>
-<li><p>extraCssText:<code>&#39;width:25em; white-space:pre-wrap&#39;</code>,换行和控制宽度。</p>
-</li>
-<li><p>confine：好用，是否将 tooltip 框限制在图表的区域内。</p>
-<ul>
-<li>当图表外层的 dom 被设置为 <code>&#39;overflow: hidden&#39;</code>，或者移动端窄屏，导致 tooltip 超出外界被截断时，此配置比较有用。</li>
-</ul>
-</li>
-<li><p>position：</p>
-<ul>
-<li><p><code>Array</code></p>
-<p>通过数组表示提示框浮层的位置，支持数字设置绝对位置，百分比设置相对位置。</p>
-<p>示例:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绝对位置，相对于容器左侧 10px, 上侧 10 px</span></span><br><span class="line">position: [<span class="number">10</span>, <span class="number">10</span>]</span><br><span class="line"><span class="comment">// 相对位置，放置在容器正中间</span></span><br><span class="line">position: [<span class="string">'50%'</span>, <span class="string">'50%'</span>]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>Function</code></p>
-<p>回调函数</p>
-<p><code>(point: Array, params: Object|Array.&lt;Object&gt;, dom: HTMLDomElement, rect: Object, size: Object) =&gt; Array</code></p>
-<p>可以实现和鼠标位置或者图标元素有关的位移。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="渐变色"><a href="#渐变色" class="headerlink" title="渐变色"></a>渐变色</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">areaStyle:&#123;</span><br><span class="line">    color:<span class="keyword">new</span> echarts.graphic.LinearGradient(<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>, [</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">0</span>,  <span class="attr">color</span>: <span class="string">"#345379"</span>&#125;,</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">0.2</span>, <span class="attr">color</span>: <span class="string">"#59c4e6"</span>,&#125;,</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">0.4</span>, <span class="attr">color</span>: <span class="string">"#9179cb"</span>,&#125;,</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">0.6</span>, <span class="attr">color</span>: <span class="string">"#edafda"</span>,&#125;,</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">0.8</span>, <span class="attr">color</span>: <span class="string">"#a5e7f0"</span>,&#125;,</span><br><span class="line">            &#123; <span class="attr">offset</span>: <span class="number">1</span>, <span class="attr">color</span>: <span class="string">"#ffa0dd"</span>,&#125;,</span><br><span class="line">    	],)</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>前4个参数是位置，当前为从左到右，不同的offset位置，代表该百分数位置的颜色。</p>
-<h3 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h3><p>可以有各种鼠标事件。</p>
-
+          <h2 id="Echart-in-SE3-1"><a href="#Echart-in-SE3-1" class="headerlink" title="Echart in SE3_1"></a>Echart in SE3_1</h2><p>SE3的统计图</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/08/Echart2.0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -476,10 +452,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-08 22:36:48 / Modified: 23:24:59" itemprop="dateCreated datePublished" datetime="2020-03-08T22:36:48+08:00">2020-03-08</time>
+              <time title="Created: 2020-03-08 22:36:48" itemprop="dateCreated datePublished" datetime="2020-03-08T22:36:48+08:00">2020-03-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-12 23:56:14" itemprop="dateModified" datetime="2020-03-12T23:56:14+08:00">2020-03-12</time>
+              </span>
 
           
 
@@ -492,9 +474,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h1><h2 id="0-wiki"><a href="#0-wiki" class="headerlink" title="0. wiki"></a>0. wiki</h2><p><strong>内容分发网络</strong>（英语：<strong>C</strong>ontent <strong>D</strong>elivery <strong>N</strong>etwork或<strong>C</strong>ontent <strong>D</strong>istribution <strong>N</strong>etwork，缩写：<strong>CDN</strong>）是指一种透过互联网互相连接的电脑网络系统，利用最靠近每位用户的服务器，更快、更可靠地将音乐、图片、影片、应用程序及其他文件发送给用户，来提供高性能、可扩展性及低成本的网络内容传递给用户。</p>
-<p>内容分发网络节点会在多个地点，多个不同的网络上摆放。这些节点之间会动态的互相传输内容，对用户的下载行为最优化，并借此减少内容供应者所需要的带宽成本，改善用户的下载速度，提高系统的稳定性。</p>
-<h2 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h2>
+          <p>内容分发网络<strong>（英语：</strong>C<strong>ontent **D</strong>elivery <strong>N</strong>etwork或<strong>C</strong>ontent <strong>D</strong>istribution <strong>N</strong>etwork，缩写：<strong>CDN</strong>）**</p>
+<p><strong>控制时延</strong></p>
+<p>尽可能的减少资源在转发、传输、链路抖动等情况下顺利保障信息的连贯性。</p>
+<p>缓存、调度、协议优化</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/08/CDN/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

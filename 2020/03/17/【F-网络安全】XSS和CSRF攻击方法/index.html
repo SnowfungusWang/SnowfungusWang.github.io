@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"snowfunguswang.github.io","root":"/","scheme":"Muse","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="XSS深度好文：https:&#x2F;&#x2F;tech.meituan.com&#x2F;2018&#x2F;09&#x2F;27&#x2F;fe-security.html，美团真的nb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【F-网络安全】XSS和CSRF攻击方法">
+<meta property="og:url" content="https://snowfunguswang.github.io/2020/03/17/%E3%80%90F-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E3%80%91XSS%E5%92%8CCSRF%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="FungusGarden">
+<meta property="og:description" content="XSS深度好文：https:&#x2F;&#x2F;tech.meituan.com&#x2F;2018&#x2F;09&#x2F;27&#x2F;fe-security.html，美团真的nb">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-17T01:25:38.704Z">
+<meta property="article:modified_time" content="2020-03-17T05:32:01.430Z">
+<meta property="article:author" content="Miss FF">
+<meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://snowfunguswang.github.io/2020/03/17/%E3%80%90F-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E3%80%91XSS%E5%92%8CCSRF%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true
+  };
+</script>
+
+  <title>【F-网络安全】XSS和CSRF攻击方法 | FungusGarden</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FungusGarden</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">一只活泼的小菜蘑菇 【FrozenFungus】</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://snowfunguswang.github.io/2020/03/17/%E3%80%90F-%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E3%80%91XSS%E5%92%8CCSRF%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Miss FF">
+      <meta itemprop="description" content="南大软院17级在读本科生。目标是像Mr.Caribou一样掌握生活。（等等这个人在说什么梦话呢）">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FungusGarden">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【F-网络安全】XSS和CSRF攻击方法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-03-17 09:25:38 / Modified: 13:32:01" itemprop="dateCreated datePublished" datetime="2020-03-17T09:25:38+08:00">2020-03-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h1><p>深度好文：<a href="https://tech.meituan.com/2018/09/27/fe-security.html，美团真的nb" target="_blank" rel="noopener">https://tech.meituan.com/2018/09/27/fe-security.html，美团真的nb</a></p>
+<a id="more"></a>
+
+<h2 id="MDN术语解释"><a href="#MDN术语解释" class="headerlink" title="MDN术语解释"></a>MDN术语解释</h2><ol>
+<li>Cross-Site-Script，跨站脚本攻击。</li>
+<li>在网站上诸如恶意的客户端代码，当受害者登录网站的时候自动运行恶意代码，使攻击者可以突破网站的访问权限，冒充受害者。</li>
+<li>攻击结果：恶意脚本可以任意读取cookir、session tokens或者其他信息、重写html。<ul>
+<li>将 cookies 或其他隐私信息发送给攻击者</li>
+<li>将受害者重定向到由攻击者控制的网页</li>
+<li>经由恶意网站在受害者的机器上进行其他恶意操作。</li>
+</ul>
+</li>
+<li>易发生：<ul>
+<li>数据从一个不可靠链接进入web程序（网页本身是恶意的）</li>
+<li>没有过滤掉恶意代码的动态内容被发给用户（服务器传过来的内容有问题）</li>
+</ul>
+</li>
+<li>分类：<ul>
+<li>存储型：<strong>注入型脚本</strong> <em>永久存储</em> 在目标服务器上。当浏览器请求数据时，脚本从服务器上传回并执行。<ul>
+<li>网站本身恶意，或者有人想办法注入了</li>
+</ul>
+</li>
+<li>反射型：当用户点击一个恶意链接，或者提交一个表单，或者进入一个恶意网站时，注入脚本进入被攻击者的网站。Web服务器将注入脚本（比如一个错误信息，搜索结果等）返回到用户的浏览器上。由于浏览器认为这个响应来自”可信任”的服务器，所以会执行这段脚本。<ul>
+<li>提交一个表单？</li>
+<li>“可信任”，那就是说网站本身不可靠？</li>
+</ul>
+</li>
+<li>基于DOM的XSS：通过修改原始的客户端代码，受害者浏览器的 DOM 环境改变，导致有效载荷的执行。也就是说，<strong>页面本身并没有变化</strong>，但由于<strong>DOM环境被恶意修改</strong>，有客户端代码被包含进了页面，并且意外执行。<ul>
+<li>怎么做到？</li>
+<li>运行一段含有DOM操作的代码吗？</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>总结：想办法让浏览器运行恶意的脚本，因为浏览器没法分辨哪段是恶意的。也就是脚本中混进了一个叛徒。</li>
+</ol>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ol>
+<li>存储型：<ul>
+<li>存储区域：后端数据库</li>
+<li>插入点：HTML</li>
+<li>步骤：<ul>
+<li>攻击者把恶意代码想方设法的提交到被攻击网站的数据库</li>
+<li>用户打开被攻击网站时候，服务端把恶意代码取出来放在html里返给浏览器</li>
+<li>用户的浏览器收到然后解析，顺带着就把恶意的执行了</li>
+</ul>
+</li>
+<li>常见于：带有用户保存数据的网站功能，如论坛发帖、商品评论、用户私信等。</li>
+<li>一句话总结：需要能提交输入然后被存储，之后可以被其它用户看到。也就是<ul>
+<li>有注入点</li>
+<li>注入到公共网页</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>反射型XSS：<ul>
+<li>存储区域：URL</li>
+<li>插入点：html</li>
+<li>步骤：<ul>
+<li>攻击者想方设法的构造一个包含攻击代码的url</li>
+<li>诱导用户点开这个url，向服务端发送请求，服务端把这段攻击代码从url里取出来，拼在HTML里头返回</li>
+<li>用户浏览器解析执行响应，顺手把恶意的执行了</li>
+</ul>
+</li>
+<li>常见于：通过 URL 传递参数的功能，如网站搜索、跳转等。<ul>
+<li>POST 的内容也可以触发反射型 XSS，只不过其触发条件比较苛刻（需要<strong>构造表单提交页面</strong>，并引导用户点击），所以非常少见。</li>
+<li>攻击者往往会结合多种手段诱导用户点击。</li>
+</ul>
+</li>
+<li>和存储型的区别：存储型 XSS 的恶意代码存在数据库里，反射型 XSS 的恶意代码存在 URL 里。</li>
+<li>一句话总结：把恶意代码混在url里，往往是个参数啥的，反正就是不用存，白嫖一下服务器的响应和解析，给自己披一层“我来自服务器，你就放心解析”的外衣欺骗傻白甜浏览器。<ul>
+<li>比起存储型的，不用存进去，想办法把url注进网页上就行，一次性的活儿。</li>
+<li>那你说咋注进去啊可</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DOM型<ul>
+<li>存储区：后端数据库、前端存储、url</li>
+<li>插入点：前端js</li>
+<li>步骤：<ul>
+<li>攻击者想方设法的构造一个特殊url，其中包含攻击代码</li>
+<li>用户打开这个url</li>
+<li>浏览器响应这个恶意url，js取出其中的恶意代码</li>
+</ul>
+</li>
+<li>和前两种区别：取出和执行都是浏览器来执行，是前端自身的安全漏洞。那俩是服务端的安全漏洞。</li>
+</ul>
+</li>
+</ol>
+<h2 id="预防"><a href="#预防" class="headerlink" title="预防"></a>预防</h2><p>两大攻击要素：</p>
+<ul>
+<li>攻击者提交恶意代码。</li>
+<li>浏览器执行恶意代码。</li>
+</ul>
+<h3 id="输入过滤"><a href="#输入过滤" class="headerlink" title="输入过滤"></a>输入过滤</h3><ol>
+<li><p>前端过滤不能完全解决，你绕过前端构造个请求就凉了</p>
+</li>
+<li><p>后端在写入数据库前，对输入进行过滤，然后把“安全的”内容，返回给前端？不能确定未来这个内容要被输出到哪。</p>
+<ul>
+<li><p>用户的输入内容可能同时提供给前端和客户端，而一旦经过了 <code>escapeHTML()</code>，客户端显示的内容就变成了乱码( <code>5 &lt; 7</code> )。</p>
+</li>
+<li><p>在前端中，不同的位置所需的编码也不同。</p>
+<ul>
+<li>当 <code>5 &lt; 7</code> 作为 HTML 拼接页面时，可以正常显示：</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">title</span>=<span class="string">"comment"</span>&gt;</span>5 <span class="symbol">&amp;lt;</span> 7<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当 <code>5 &lt; 7</code> 通过 Ajax 返回，然后赋值给 JavaScript 的变量时，前端得到的字符串就是转义后的字符。这个内容不能直接用于 Vue 等模板的展示，也不能直接用于内容长度计算。不能用于标题、alert 等。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="预防存储型和反射型-XSS-攻击"><a href="#预防存储型和反射型-XSS-攻击" class="headerlink" title="预防存储型和反射型 XSS 攻击"></a>预防存储型和反射型 XSS 攻击</h3><ul>
+<li>改成纯前端渲染，把代码和数据分隔开。</li>
+<li>对 HTML 做充分转义。</li>
+</ul>
+<ol>
+<li>纯前端渲染：<ul>
+<li>过程：就是灭有拼接HTML，html解析的时候每部分是啥是很明确的，数据填进去的时候也会区分是文本、属性还是样式，就不会触发html解析引起的恶意脚本问题了。<ul>
+<li>浏览器先加载一个静态 HTML，此 HTML 中不包含任何跟业务相关的数据。</li>
+<li>然后浏览器执行 HTML 中的 JavaScript。</li>
+<li>JavaScript 通过 Ajax 加载业务数据，调用 DOM API 更新到页面上。</li>
+</ul>
+</li>
+<li>DOM式的解决不了</li>
+<li>性能或者SEO需求里还是可能拼接HTML</li>
+</ul>
+</li>
+<li>转义HMTL：<ul>
+<li>在HTML模板的各处插入点进行充分转义。</li>
+<li>通常的模板引擎：转义<code>&amp; &lt; &gt; &quot; &#39; /</code><ul>
+<li>对HTML标签文字内容和属性有用</li>
+<li>对内联CSS、JS、JSON、跳转链接没用</li>
+</ul>
+</li>
+<li>Java 工程里，常用的转义库为 <code>org.owasp.encoder</code></li>
+<li>现在还有自动根据插入点来选择编码方式的</li>
+</ul>
+</li>
+</ol>
+<h3 id="Dom型"><a href="#Dom型" class="headerlink" title="Dom型"></a>Dom型</h3><p>是因为前端代码写的不行</p>
+<ul>
+<li><code>.innerHTML、.outerHTML、document.write()</code>可能会把不可信的插进去，改用<code>.textContent、.setAttribute()</code></li>
+<li>如果用 Vue/React 技术栈，并且不使用 <code>v-html</code>/<code>dangerouslySetInnerHTML</code> 功能，就在前端 render 阶段避免 <code>innerHTML</code>、<code>outerHTML</code> 的 XSS 隐患。</li>
+<li>DOM 中的内联事件监听器，如 <code>location</code>、<code>onclick</code>、<code>onerror</code>、<code>onload</code>、<code>onmouseover</code> 等，<code>&lt;a&gt;</code> 标签的 <code>href</code> 属性，JavaScript 的 <code>eval()</code>、<code>setTimeout()</code>、<code>setInterval()</code> 等，都能把字符串作为代码运行。</li>
+</ul>
+<h3 id="其他的"><a href="#其他的" class="headerlink" title="其他的"></a>其他的</h3><ul>
+<li>CSP：Content Security Policy<ul>
+<li>禁止加载外域代码，防止复杂的攻击逻辑。</li>
+<li>禁止外域提交，网站被攻击后，用户的数据不会泄露到外域。</li>
+<li>禁止内联脚本执行（规则较严格，目前发现 GitHub 使用）。</li>
+<li>禁止未授权的脚本执行（新特性，Google Map 移动版在使用）。</li>
+<li>合理使用上报可以及时发现 XSS，利于尽快修复问题。</li>
+</ul>
+</li>
+<li>输入长度控制：能增加攻击难度</li>
+<li>HTTP-only Cookie: 禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie。</li>
+<li>验证码：防止脚本冒充用户提交危险操作。</li>
+</ul>
+<h2 id="检测XSS"><a href="#检测XSS" class="headerlink" title="检测XSS"></a>检测XSS</h2><ol>
+<li><p>使用通用 XSS 攻击字符串手动检测 XSS 漏洞。</p>
+<ul>
+<li><pre><code>jaVasCript:/*-/*`/*\`/*&apos;/*&quot;/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//&lt;/stYle/&lt;/titLe/&lt;/teXtarEa/&lt;/scRipt/--!&gt;\x3csVg/&lt;sVg/oNloAd=alert()//&gt;\x3e
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    -   它能够检测到存在于 HTML 属性、HTML 文字内容、HTML 注释、跳转链接、内联 JavaScript 字符串、内联 CSS 样式表等多种上下文中的 XSS 漏洞，也能检测 `eval()`、`setTimeout()`、`setInterval()`、`Function()`、`innerHTML`、`document.write()` 等 DOM 型 XSS 漏洞，并且能绕过一些 XSS 过滤器。</span><br><span class="line"></span><br><span class="line">    -   只要在网站的各输入框中提交这个字符串，或者把它拼接到 URL 参数上，就可以进行检测了。</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>.  使用扫描工具自动检测 XSS 漏洞。</span><br><span class="line"></span><br><span class="line">## 攻击例子</span><br><span class="line"></span><br><span class="line"><span class="title">深度好文，知乎nb：https:</span>//zhuanlan.zhihu.com/p/<span class="number">26177815</span></span><br><span class="line"></span><br><span class="line"><span class="number">1</span>.  留言板内容：`&lt;script&gt;alert(“hey!you are attacked”)&lt;/script&gt;`，存储型的</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>.  大小写绕过过滤检测：浏览器不看大小写就执行的</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>.  双重结果：`[http://<span class="number">192.168</span>.<span class="number">1.102</span>/xss/example3.php?name=pt&gt;alert(<span class="string">"hey!"</span>)pt&gt;])`</span><br><span class="line"></span><br><span class="line"><span class="number">4</span>.  非&lt; script &gt;标签：`[http://<span class="number">192.168</span>.<span class="number">1.102</span>/xss/example4.php?name=</span><br><span class="line">    src='w.<span class="number">123</span>' onerror='alert(<span class="string">"hey!"</span>)'&gt;`</span><br><span class="line"></span><br><span class="line">    -   ```text</span><br><span class="line">        &lt;a onmousemove=’do something here’&gt;</span><br></pre></td></tr></table></figure>
+
+当用户鼠标移动时即可运行代码
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div onmouseover&#x3D;‘do something here’&gt;</span><br></pre></td></tr></table></figure>
+
+当用户鼠标在这个块上面时即可运行（可以配合weight等参数将div覆盖页面，鼠标不划过都不行）
+
+类似的还有onclick，这个要点击后才能运行代码，条件相对苛刻，就不再详述。</code></pre></li>
+</ul>
+</li>
+<li><p>eval（）：把编码后的放到eval里面</p>
+</li>
+<li><p>主动闭合标签：把原来html的标签、引号啥的闭合了。就可以加入自己的语义了</p>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="迷思"><a href="#迷思" class="headerlink" title="迷思"></a>迷思</h3><ol>
+<li>XSS 防范是后端 RD 的责任，后端 RD 应该在所有用户提交数据的接口，对敏感字符进行转义，才能进行下一步操作。</li>
+</ol>
+<blockquote>
+<p>  不正确。因为： * 防范存储型和反射型 XSS 是后端 RD 的责任。而 DOM 型 XSS 攻击不发生在后端，是前端 RD 的责任。防范 XSS 是需要后端 RD 和前端 RD 共同参与的系统工程。 * 转义应该在输出 HTML 时进行，而不是在提交用户输入时。</p>
+</blockquote>
+<ol start="2">
+<li>所有要插入到页面上的数据，都要通过一个敏感字符过滤函数的转义，过滤掉通用的敏感字符后，就可以插入到页面中。</li>
+</ol>
+<blockquote>
+<p>  不正确。 不同的上下文，如 HTML 属性、HTML 文字内容、HTML 注释、跳转链接、内联 JavaScript 字符串、内联 CSS 样式表等，所需要的转义规则不一致。 业务 RD 需要选取合适的转义库，并针对不同的上下文调用不同的转义规则。</p>
+</blockquote>
+<h3 id="总体思想"><a href="#总体思想" class="headerlink" title="总体思想"></a>总体思想</h3><ul>
+<li><strong>利用模板引擎</strong> 开启模板引擎自带的 HTML 转义功能。例如： 在 ejs 中，尽量使用 <code>&lt;%= data %&gt;</code> 而不是 <code>&lt;%- data %&gt;</code>； 在 doT.js 中，尽量使用 <code>{ {! data }</code> 而不是 <code>{ {= data }</code>； 在 FreeMarker 中，确保引擎版本高于 2.3.24，并且选择正确的 <code>freemarker.core.OutputFormat</code>。</li>
+<li><strong>避免内联事件</strong> 尽量不要使用 <code>onLoad=&quot;onload(&#39;{ {data}}&#39;)&quot;</code>、<code>onClick=&quot;go(&#39;{ {action} }&#39;)&quot;</code> 这种拼接内联事件的写法。在 JavaScript 中通过 <code>.addEventlistener()</code> 事件绑定会更安全。</li>
+<li><strong>避免拼接 HTML</strong> 前端采用拼接 HTML 的方法比较危险，如果框架允许，使用 <code>createElement</code>、<code>setAttribute</code> 之类的方法实现。或者采用比较成熟的渲染框架，如 Vue/React 等。</li>
+<li><strong>时刻保持警惕</strong> 在插入位置为 DOM 属性、链接等位置时，要打起精神，严加防范。</li>
+<li><strong>增加攻击难度，降低攻击后果</strong> 通过 CSP、输入长度配置、接口安全措施等方法，增加攻击的难度，降低攻击的后果。</li>
+<li><strong>主动检测和发现</strong> 可使用 XSS 攻击字符串和自动扫描工具寻找潜在的 XSS 漏洞。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/15/%E3%80%90%E9%9D%A2%E7%BB%8F%E3%80%91%E5%AD%97%E8%8A%82%E7%AC%94%E8%AF%95/" rel="prev" title="【面经】字节笔试">
+      <i class="fa fa-chevron-left"></i> 【面经】字节笔试
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#XSS"><span class="nav-number">1.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MDN术语解释"><span class="nav-number">1.1.</span> <span class="nav-text">MDN术语解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">1.2.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预防"><span class="nav-number">1.3.</span> <span class="nav-text">预防</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入过滤"><span class="nav-number">1.3.1.</span> <span class="nav-text">输入过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预防存储型和反射型-XSS-攻击"><span class="nav-number">1.3.2.</span> <span class="nav-text">预防存储型和反射型 XSS 攻击</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dom型"><span class="nav-number">1.3.3.</span> <span class="nav-text">Dom型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的"><span class="nav-number">1.3.4.</span> <span class="nav-text">其他的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测XSS"><span class="nav-number">1.4.</span> <span class="nav-text">检测XSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#迷思"><span class="nav-number">1.5.1.</span> <span class="nav-text">迷思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体思想"><span class="nav-number">1.5.2.</span> <span class="nav-text">总体思想</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Miss FF</p>
+  <div class="site-description" itemprop="description">南大软院17级在读本科生。目标是像Mr.Caribou一样掌握生活。（等等这个人在说什么梦话呢）</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Miss FF</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.2
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -28,7 +28,7 @@
 <meta property="og:description" content="lc提高班1期Week5  by  雪菜大佬">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-14T08:50:38.536Z">
-<meta property="article:modified_time" content="2020-03-14T15:35:18.466Z">
+<meta property="article:modified_time" content="2020-03-17T05:27:24.161Z">
 <meta property="article:author" content="Miss FF">
 <meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
 <meta name="twitter:card" content="summary">
@@ -172,10 +172,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-14 16:50:38 / Modified: 23:35:18" itemprop="dateCreated datePublished" datetime="2020-03-14T16:50:38+08:00">2020-03-14</time>
+              <time title="Created: 2020-03-14 16:50:38" itemprop="dateCreated datePublished" datetime="2020-03-14T16:50:38+08:00">2020-03-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-17 13:27:24" itemprop="dateModified" datetime="2020-03-17T13:27:24+08:00">2020-03-17</time>
+              </span>
 
           
 
@@ -230,23 +236,30 @@
 </ul>
 <h2 id="5"><a href="#5" class="headerlink" title="5"></a>5</h2><p>最长回文子串。</p>
 <ul>
-<li></li>
-<li><p>273</p>
+<li><p>这个题，老为难人了</p>
 </li>
-<li><p>6</p>
+<li><p>硬刚法是能搞的，就是顺着，找到头尾相等的，然后看是不是回文。时间复杂度大概是n^3,绝了</p>
+<ul>
+<li>一个小的改良：锁定头尾的时候可以倒着找，找到了就break</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">string</span> <span class="title">longestPalindrome</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">max</span>=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">string</span> res=<span class="string">""</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt; s.length(); i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=s.length()<span class="number">-1</span>;  j&gt;=i; j--)&#123;</span><br><span class="line">                <span class="keyword">if</span>(s[j]==s[i] &amp;&amp; j-i+<span class="number">1</span>&gt;<span class="built_in">max</span>)&#123;</span><br><span class="line">                        <span class="comment">//看是不是回文</span></span><br><span class="line">                        <span class="keyword">int</span> l=i;</span><br><span class="line">                        <span class="keyword">int</span> r=j;</span><br><span class="line">                        <span class="keyword">bool</span> isPal=<span class="literal">true</span>;</span><br><span class="line">                        <span class="keyword">while</span>(l&lt;=r)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(s[l]!=s[r])&#123;</span><br><span class="line">                                isPal=<span class="literal">false</span>;</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                            l++;</span><br><span class="line">                            r--;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span>(isPal)&#123;</span><br><span class="line">                            <span class="built_in">max</span>=j-i+<span class="number">1</span>;</span><br><span class="line">                            res=s.substr(i,j-i+<span class="number">1</span>);</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>3</p>
+<li><p>另一个硬刚法，以i为中心，奇偶分别拓展。</p>
 </li>
-<li><p>166</p>
+<li><p>硬刚进阶：用找重复的方法跳过了判断奇偶（最快）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">longestPalindrome</span><span class="params">(<span class="built_in">string</span> s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(s.<span class="built_in">size</span>() &lt; <span class="number">2</span>) <span class="keyword">return</span> s;</span><br><span class="line">    <span class="keyword">int</span> max_len = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> start_idx = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; s.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        <span class="keyword">int</span> r_ptr = i; </span><br><span class="line">        <span class="keyword">int</span> l_ptr = i;</span><br><span class="line">        <span class="comment">//find the middle of a palindrome</span></span><br><span class="line">        <span class="keyword">while</span>(r_ptr &lt; s.<span class="built_in">size</span>()<span class="number">-1</span> &amp;&amp; s[r_ptr] == s[r_ptr + <span class="number">1</span>]) r_ptr++;</span><br><span class="line">        i = r_ptr+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//expand from the middle out</span></span><br><span class="line">        <span class="keyword">while</span>(r_ptr &lt; s.<span class="built_in">size</span>()<span class="number">-1</span> &amp;&amp; l_ptr &gt; <span class="number">0</span> &amp;&amp; s[r_ptr + <span class="number">1</span>] == s[l_ptr - <span class="number">1</span>]) &#123;</span><br><span class="line">            r_ptr++;</span><br><span class="line">            l_ptr--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> new_len = r_ptr - l_ptr + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(new_len &gt; max_len) &#123;</span><br><span class="line">            start_idx = l_ptr;</span><br><span class="line">            max_len = new_len;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> s.substr(start_idx, max_len);</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>298</p>
+<li><p>我的为什么慢：每次不一定能找到回文。</p>
 </li>
-<li><p>131</p>
-</li>
-<li><p>227</p>
-</li>
-<li><p>30</p>
-</li>
+</ul>
+<h2 id="273"><a href="#273" class="headerlink" title="273"></a>273</h2><ul>
+<li>6</li>
+<li>3</li>
+<li>166</li>
+<li>298</li>
+<li>131</li>
+<li>227</li>
+<li>30</li>
 </ul>
 
     </div>
@@ -329,7 +342,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目列表"><span class="nav-number">1.</span> <span class="nav-text">题目列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#38"><span class="nav-number">1.1.</span> <span class="nav-text">38</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#49"><span class="nav-number">1.2.</span> <span class="nav-text">49</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#165"><span class="nav-number">1.3.</span> <span class="nav-text">165</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">1.4.</span> <span class="nav-text">5</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目列表"><span class="nav-number">1.</span> <span class="nav-text">题目列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#38"><span class="nav-number">1.1.</span> <span class="nav-text">38</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#49"><span class="nav-number">1.2.</span> <span class="nav-text">49</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#165"><span class="nav-number">1.3.</span> <span class="nav-text">165</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">1.4.</span> <span class="nav-text">5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#273"><span class="nav-number">1.5.</span> <span class="nav-text">273</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -343,7 +356,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

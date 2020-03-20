@@ -28,7 +28,7 @@
 <meta property="og:description" content="XSS深度好文：https:&#x2F;&#x2F;tech.meituan.com&#x2F;2018&#x2F;09&#x2F;27&#x2F;fe-security.html，美团真的nb">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-17T01:25:38.704Z">
-<meta property="article:modified_time" content="2020-03-17T05:32:01.430Z">
+<meta property="article:modified_time" content="2020-03-20T09:03:40.925Z">
 <meta property="article:author" content="Miss FF">
 <meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
 <meta name="twitter:card" content="summary">
@@ -172,10 +172,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-03-17 09:25:38 / Modified: 13:32:01" itemprop="dateCreated datePublished" datetime="2020-03-17T09:25:38+08:00">2020-03-17</time>
+              <time title="Created: 2020-03-17 09:25:38" itemprop="dateCreated datePublished" datetime="2020-03-17T09:25:38+08:00">2020-03-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-20 17:03:40" itemprop="dateModified" datetime="2020-03-20T17:03:40+08:00">2020-03-20</time>
+              </span>
 
           
 
@@ -336,15 +342,57 @@
 <li>如果用 Vue/React 技术栈，并且不使用 <code>v-html</code>/<code>dangerouslySetInnerHTML</code> 功能，就在前端 render 阶段避免 <code>innerHTML</code>、<code>outerHTML</code> 的 XSS 隐患。</li>
 <li>DOM 中的内联事件监听器，如 <code>location</code>、<code>onclick</code>、<code>onerror</code>、<code>onload</code>、<code>onmouseover</code> 等，<code>&lt;a&gt;</code> 标签的 <code>href</code> 属性，JavaScript 的 <code>eval()</code>、<code>setTimeout()</code>、<code>setInterval()</code> 等，都能把字符串作为代码运行。</li>
 </ul>
-<h3 id="其他的"><a href="#其他的" class="headerlink" title="其他的"></a>其他的</h3><ul>
-<li>CSP：Content Security Policy<ul>
+<h3 id="CSP"><a href="#CSP" class="headerlink" title="CSP"></a>CSP</h3><p><a href="http://www.ruanyifeng.com/blog/2016/09/csp.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2016/09/csp.html</a></p>
+<p>CSP 的实质就是白名单制度，开发者明确告诉客户端，哪些外部资源可以加载和执行，等同于提供白名单。它的实现和执行全部由浏览器完成，开发者只需提供配置。</p>
+<p>Content Security Policy</p>
+<ul>
 <li>禁止加载外域代码，防止复杂的攻击逻辑。</li>
 <li>禁止外域提交，网站被攻击后，用户的数据不会泄露到外域。</li>
 <li>禁止内联脚本执行（规则较严格，目前发现 GitHub 使用）。</li>
 <li>禁止未授权的脚本执行（新特性，Google Map 移动版在使用）。</li>
 <li>合理使用上报可以及时发现 XSS，利于尽快修复问题。</li>
 </ul>
-</li>
+<h4 id="启用"><a href="#启用" class="headerlink" title="启用"></a>启用</h4><ul>
+<li>通过 HTTP 头信息的<code>Content-Security-Policy</code>的字段</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Content-Security-Policy</span>: script-src 'self'; object-src 'none';</span><br><span class="line">style-src cdn.example.org third-party.org; child-src https:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过网页的<code>&lt;meta&gt;</code>标签</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'; style-src cdn.example.org third-party.org; child-src https:"&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，CSP 做了如下配置。</p>
+<blockquote>
+<ul>
+<li>脚本：只信任当前域名</li>
+<li><code>&lt;object&gt;</code>标签：不信任任何URL，即不加载任何资源</li>
+<li>样式表：只信任<code>cdn.example.org</code>和<code>third-party.org</code></li>
+<li>框架（frame）：必须使用HTTPS协议加载</li>
+<li>其他资源：没有限制</li>
+</ul>
+</blockquote>
+<h4 id="限制选项"><a href="#限制选项" class="headerlink" title="限制选项"></a>限制选项</h4><p>资源加载限制、default-src（设置默认值）、url限制、report-uri（记录XSS）</p>
+<h4 id="选项值"><a href="#选项值" class="headerlink" title="选项值"></a>选项值</h4><p>主机名、路径名、通配符、协议名、关键字<code>self</code>、<code>none</code>设置白名单</p>
+<h4 id="script-src的特殊值"><a href="#script-src的特殊值" class="headerlink" title="script-src的特殊值"></a>script-src的特殊值</h4><p>要放到单引号内</p>
+<ul>
+<li><strong>nonce值</strong>：每次HTTP回应给出一个授权token，页面内嵌脚本必须有这个token，才会执行</li>
+<li><strong>hash值</strong>：列出允许执行的脚本代码的Hash值，页面内嵌脚本的哈希值只有吻合的情况下，才能执行（计算hash值的时候，&lt; script &gt;标签不算在内。）。</li>
+<li>这俩还可以用在style-src里</li>
+</ul>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>（1）<code>script-src</code>和<code>object-src</code>是必设的，除非设置了<code>default-src</code>。</p>
+<p>因为攻击者只要能注入脚本，其他限制都可以规避。而<code>object-src</code>必设是因为 Flash 里面可以执行外部脚本。</p>
+<p>（2）<code>script-src</code>不能使用<code>unsafe-inline</code>关键字（除非伴随一个nonce值），也不能允许设置<code>data:</code>URL。</p>
+<p>下面是两个恶意攻击的例子。</p>
+<blockquote>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src&#x3D;&quot;x&quot; onerror&#x3D;&quot;evil()&quot;&gt;</span><br><span class="line">&lt;script src&#x3D;&quot;data:text&#x2F;javascript,evil()&quot;&gt;&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>（3）必须特别注意 JSONP 的回调函数。</p>
+<blockquote>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;script</span><br><span class="line">src&#x3D;&quot;&#x2F;path&#x2F;jsonp?callback&#x3D;alert(document.domain)&#x2F;&#x2F;&quot;&gt;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>上面的代码中，虽然加载的脚本来自当前域名，但是通过改写回调函数，攻击者依然可以执行恶意代码。</p>
+<h3 id="其他的"><a href="#其他的" class="headerlink" title="其他的"></a>其他的</h3><ul>
 <li>输入长度控制：能增加攻击难度</li>
 <li>HTTP-only Cookie: 禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie。</li>
 <li>验证码：防止脚本冒充用户提交危险操作。</li>
@@ -389,6 +437,147 @@
 <li><strong>增加攻击难度，降低攻击后果</strong> 通过 CSP、输入长度配置、接口安全措施等方法，增加攻击的难度，降低攻击的后果。</li>
 <li><strong>主动检测和发现</strong> 可使用 XSS 攻击字符串和自动扫描工具寻找潜在的 XSS 漏洞。</li>
 </ul>
+<h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><h2 id="Wiki"><a href="#Wiki" class="headerlink" title="Wiki"></a>Wiki</h2><p>跨站请求伪造：Cross-site request forgery， <strong>one-click attack</strong> 或者 <strong>session riding</strong>。</p>
+<p>XSS利用的是用户对指定网站的信任，CSRF利用的是网站对用户网页浏览器的信任。</p>
+<p>攻击者通过一些技术手段<strong>欺骗用户的浏览器去</strong>访问一个自己曾经<strong>认证过</strong>的网站并运行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去运行。这利用了web中用户身份验证的一个漏洞：<strong>简单的身份验证只能保证请求发自某个用户的浏览器，却不能保证请求本身是用户自愿发出的</strong>。</p>
+<h2 id="攻击方法"><a href="#攻击方法" class="headerlink" title="攻击方法"></a>攻击方法</h2><p>流程：</p>
+<ul>
+<li>受害者登录a.com，并保留了登录凭证（Cookie）。</li>
+<li>攻击者引诱受害者访问了b.com。</li>
+<li>b.com 向 a.com 发送了一个请求：a.com/act=xx。浏览器会默认携带a.com的Cookie。</li>
+<li>a.com接收到请求后，对请求进行验证，并确认是受害者的凭证，误以为是受害者自己发送的请求。</li>
+<li>a.com以受害者的名义执行了act=xx。</li>
+<li>攻击完成，攻击者在受害者不知情的情况下，冒充受害者，让a.com执行了自己定义的操作。</li>
+</ul>
+<p>就是说，浏览器其实是自动执行这个指令，他也不判断是不是用户输入的或者主观想要的，所以就直接发送，发的时候自带cookie，可不就被服务器信任了吗。</p>
+<p>==cookie==</p>
+<h3 id="分类-1"><a href="#分类-1" class="headerlink" title="分类"></a>分类</h3><ol>
+<li>GET：第三方页面里写个隐形的http请求，用户点开之后就会向被欺骗的网站自动发送请求。</li>
+<li>POST：一般是个自动提交的表单，</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"http://bank.example/withdraw"</span> <span class="attr">method</span>=<span class="string">POST</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"account"</span> <span class="attr">value</span>=<span class="string">"xiaoming"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"amount"</span> <span class="attr">value</span>=<span class="string">"10000"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"for"</span> <span class="attr">value</span>=<span class="string">"hacker"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"> <span class="built_in">document</span>.forms[<span class="number">0</span>].submit(); </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>链接型：这种需要用户点击链接才会触发。这种类型通常是在论坛中发布的图片中嵌入恶意链接，或者以广告的形式诱导用户中招。</li>
+</ol>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li>攻击一般发起在<strong>第三方网站</strong>，而不是被攻击的网站。被攻击的网站无法防止攻击发生。</li>
+<li>攻击<strong>利用</strong>受害者在被攻击网站的<strong>登录凭证</strong>，<strong>冒充</strong>受害者提交操作；而不是直接窃取数据。</li>
+<li>整个过程攻击者并<strong>不能获取到受害者的登录凭证</strong>，仅仅是“冒用”。</li>
+<li>跨站请求可以用<strong>各种方式</strong>：图片URL、超链接、CORS、Form提交等等。部分请求方式可以直接嵌入在第三方论坛、文章中，难以进行追踪。</li>
+</ul>
+<p>通常是跨域的，本域下有发图、链接、评论的话也可直接在本域下</p>
+<h2 id="防护"><a href="#防护" class="headerlink" title="防护"></a>防护</h2><p>增强自己网站针对CSRF的防护能力来提升安全性。</p>
+<p>攻击的特点：</p>
+<ul>
+<li>CSRF（通常）发生在第三方域名。</li>
+<li>CSRF攻击者不能获取到Cookie等信息，只是使用。</li>
+</ul>
+<p>防护策略：</p>
+<ul>
+<li>阻止不明外域的访问<ul>
+<li>同源检测</li>
+<li>Samesite Cookie</li>
+</ul>
+</li>
+<li>提交时要求附加本域才能获取的信息<ul>
+<li>CSRF Token</li>
+<li>双重Cookie验证</li>
+</ul>
+</li>
+</ul>
+<h3 id="同源检测"><a href="#同源检测" class="headerlink" title="同源检测"></a>同源检测</h3><p>禁止外域（或者不受信任的域名）对我们发起请求。</p>
+<p>靠http请求自带的header：</p>
+<ul>
+<li><p>Origin Header</p>
+<ul>
+<li><p>请求首部字段 Origin 指示了<strong>请求来自于哪个站点</strong>。该字段仅指示服务器名称，并不包含任何路径信息。该首部用于 CORS 请求或者 POST 请求。除了不包含路径信息，该字段与 Referer 首部字段相似。</p>
+</li>
+<li><pre><code class="http"><span class="attribute">Origin</span>: ""
+<span class="attribute">Origin</span>: &lt;scheme&gt; "://" &lt;host&gt; [ ":" &lt;port&gt; ]
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="bullet">-   </span>Referer Header</span><br><span class="line"></span><br><span class="line"><span class="bullet">    -   </span>Referer 请求头包含了<span class="strong">**当前请求页面的来源页面的地址**</span>，即表示<span class="strong">**当前页面是通过此来源页面里的链接进入的**</span>。服务端一般使用 Referer 请求头识别访问来源，可能会以此进行统计分析、日志记录以及缓存优化等。</span><br><span class="line"><span class="bullet">    -   </span>不会被发送：</span><br><span class="line"><span class="bullet">        -   </span>来源页面采用的协议为表示本地文件的 "file" 或者 "data" URI；</span><br><span class="line"><span class="bullet">        -   </span>当前请求页面采用的是非安全协议，而来源页面采用的是安全协议（HTTPS）。这两个Header在浏览器发起请求时，大多数情况会自动带上，并且不能由前端自定义内容。</span><br><span class="line"></span><br><span class="line"><span class="section">#### Origin Header</span></span><br><span class="line"></span><br><span class="line">有两种情况不可用：</span><br><span class="line"></span><br><span class="line"><span class="bullet">-   </span>IE11的同源策略定义不同： IE 11 不会在以下两种跨站CORS请求上添加Origin标头</span><br><span class="line"><span class="bullet">    -   </span><span class="strong">**授信范围**</span>（Trust Zones）：两个相互之间高度互信的域名，如公司域名（corporate domains），则不受同源策略限制。</span><br><span class="line"><span class="bullet">    -   </span><span class="strong">**端口**</span>：IE 未将端口号纳入到同源策略的检查中</span><br><span class="line"><span class="bullet">-   </span>302重定向：该资源临时改变了位置。因为Origin可能会被认为是其他来源的敏感信息。对于302重定向的情况来说都是定向到新的服务器上的URL，因此浏览器不想将Origin泄漏到新的服务器上。</span><br><span class="line"></span><br><span class="line"><span class="section">#### Refer Header</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.  </span>携带来源网址，就是记录该请求的来源地址。</span><br><span class="line"><span class="bullet">    -   </span>Ajax、图片、script请求：发起请求的页面地址</span><br><span class="line"><span class="bullet">    -   </span>页面跳转：打开页面历史记录的前一个页面地址</span><br><span class="line"><span class="bullet">2.  </span>由浏览器实现，安全性依赖与第三方</span><br><span class="line"><span class="bullet">3.  </span>Referrer Policy：</span><br><span class="line"><span class="bullet">    -   </span>大部分网站已经实现</span><br><span class="line"><span class="bullet">    -   </span>五种：</span><br><span class="line"><span class="bullet">        -   </span>No Referrer(never)</span><br><span class="line"><span class="bullet">        -   </span>No Referrer When Downgrade(default)</span><br><span class="line"><span class="bullet">        -   </span>Origin Only(origin)</span><br><span class="line"><span class="bullet">        -   </span>Origin When Cross-origin</span><br><span class="line"><span class="bullet">        -   </span>Unsafe URL（always）</span><br><span class="line"><span class="bullet">4.  </span>把Referrer Policy设置为<span class="code">`same-origin`</span>，以此表明哪些是跨域的</span><br><span class="line"><span class="bullet">    -   </span>对于同源的链接和引用，会发送Referer，referer值为Host不带Path；跨域访问则不携带Referer。</span><br><span class="line"><span class="bullet">    -   </span>方法：</span><br><span class="line"><span class="bullet">        -   </span>在CSP设置</span><br><span class="line"><span class="bullet">        -   </span>页面头部增加meta标签</span><br><span class="line"><span class="bullet">        -   </span>a标签增加referrerpolicy属性</span><br><span class="line"></span><br><span class="line"><span class="bullet">5.  </span>Referer没有或者不可信：</span><br><span class="line"><span class="bullet">    1.  </span>IE6、7下使用window.location.href=url进行界面的跳转，会丢失Referer。</span><br><span class="line"><span class="bullet">    2.  </span>IE6、7下使用window.open，也会缺失Referer。</span><br><span class="line"><span class="bullet">    3.  </span>HTTPS页面跳转到HTTP页面，所有浏览器Referer都丢失。</span><br><span class="line"><span class="bullet">    4.  </span>点击Flash上到达另外一个网站的时候，Referer的情况就比较杂乱，不太可信。</span><br><span class="line"></span><br><span class="line"><span class="section">#### 无法确认来源</span></span><br><span class="line"></span><br><span class="line">Origin和Refer都没有，建议直接阻止</span><br><span class="line"></span><br><span class="line"><span class="section">#### 阻止外域请求</span></span><br><span class="line"></span><br><span class="line">当一个请求是页面请求（比如网站的主页），而来源是<span class="strong">**搜索引擎**</span>的链接（例如百度的搜索结果），也会被当成疑似CSRF攻击。所以在判断的时候需要过滤掉页面请求情况。</span><br><span class="line"></span><br><span class="line">通常Header符合：</span><br><span class="line"></span><br><span class="line"><span class="code">`Accept: text/html `</span></span><br><span class="line"></span><br><span class="line"><span class="code">`Method: GET`</span></span><br><span class="line"></span><br><span class="line">此时页面请求就暴露在了CSRF的攻击范围之中。如果你在页面的GET请求中对当前用户做了什么操作的话，防范就失效了。</span><br><span class="line"></span><br><span class="line">eg：<span class="code">`GET https:**//example.com/addComment?comment=XXX&amp;dest=orderId**`</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### 同源总结</span></span><br><span class="line"></span><br><span class="line">同源验证是一个相对简单的防范方法，能够防范绝大多数的CSRF攻击。但这并不是万无一失的，对于安全性要求较高，或者有较多用户输入内容的网站，我们就要对关键的接口做额外的防护措施。</span><br><span class="line"></span><br><span class="line"><span class="section">### CSRF Token</span></span><br><span class="line"></span><br><span class="line">我们可以要求所有的用户请求都携带一个CSRF攻击者无法获取到的Token。服务器通过校验请求是否携带正确的Token。</span><br><span class="line"></span><br><span class="line"><span class="section">#### 原理</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1.  </span><span class="strong">**将CSRF Token输出到页面中**</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">    -   </span>用户打开页面的时候，服务器需要给这个用户生成一个Token，该Token通过加密算法对数据进行加密。</span><br><span class="line"><span class="bullet">    -   </span>Token最好还是存在服务器的Session中，之后在每次页面加载时，使用JS遍历整个DOM树，对于DOM中所有的a和form标签后加入Token。</span><br><span class="line"></span><br><span class="line"><span class="bullet">2.  </span><span class="strong">**页面提交的请求携带这个Token**</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">    -   </span>对于GET请求，Token将附在请求地址之后，这样URL 就变成 [<span class="string">http://url?csrftoken=tokenvalue。</span>](<span class="link">http://url/?csrftoken=tokenvalue。</span>) </span><br><span class="line"></span><br><span class="line"><span class="bullet">    -   </span>对于 POST 请求来说，要在 form 的最后加上：这样，就把Token以参数的形式加入请求了。</span><br><span class="line"></span><br><span class="line"><span class="code">        ```html</span></span><br><span class="line"><span class="code">          &lt;input type=”hidden” name=”csrftoken” value=”tokenvalue”/&gt;</span></span><br></pre></td></tr></table></figure></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>服务器验证Token是否正确</strong><ul>
+<li>当用户从客户端得到了Token，再次提交给服务器的时候，服务器需要判断Token的有效性，验证过程是先解密Token，对比加密字符串以及时间戳，如果加密字符串一致且时间未过期，那么这个Token就是有效的。</li>
+</ul>
+</li>
+</ol>
+<h4 id="分布式校验"><a href="#分布式校验" class="headerlink" title="分布式校验"></a>分布式校验</h4><p>分布式集群中CSRF Token需要存储在Redis之类的公共存储空间。</p>
+<p>由于使用Session存储，读取和验证CSRF Token会引起比较大的复杂度和性能问题，目前很多网站采用Encrypted Token Pattern方式。这种方法的Token是一个计算出来的结果，而非随机生成的字符串。这样在校验时无需再去读取存储的Token，只用再次计算一次即可。</p>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p>Token是一个比较有效的CSRF防护方法，只要页面没有XSS漏洞泄露Token，那么接口的CSRF攻击就无法成功。</p>
+<p>但是此方法的实现比较复杂，需要给每一个页面都写入Token（前端无法使用纯静态页面），每一个Form及Ajax请求都携带这个Token，后端对每一个接口都进行校验，并保证页面Token及请求Token一致。</p>
+<p>这就使得这个防护策略不能在通用的拦截上统一拦截处理，而需要每一个页面和接口都添加对应的输出和校验。这种方法工作量巨大，且有可能遗漏。</p>
+<p>PS：密码和验证码也可以起到这个作用</p>
+<h3 id="双重Cookie"><a href="#双重Cookie" class="headerlink" title="双重Cookie"></a>双重Cookie</h3><p>利用CSRF攻击不能获取到用户Cookie的特点，我们可以要求Ajax和表单请求携带一个Cookie中的值。</p>
+<h4 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h4><ul>
+<li>在用户访问网站页面时，向请求域名注入一个Cookie，内容为随机字符串（例如<code>csrfcookie=v8g9e4ksfhw</code>）。</li>
+<li>在前端向后端发起请求时，取出Cookie，并添加到URL的参数中（接上例<code>POST https://www.a.com/comment?csrfcookie=v8g9e4ksfhw</code>）。</li>
+<li>后端接口验证Cookie中的字段与URL参数中的字段是否一致，不一致则拒绝。</li>
+</ul>
+<h4 id="优势与劣势"><a href="#优势与劣势" class="headerlink" title="优势与劣势"></a>优势与劣势</h4><ol>
+<li>优势：<ul>
+<li>可以直接通过前后端拦截的的方法自动化实现。</li>
+<li>后端校验只需进行请求中字段的对比，而不需要再进行查询和存储Token。</li>
+</ul>
+</li>
+<li>劣势<ul>
+<li>任何跨域都会导致前端无法获取Cookie中的字段（包括子域名之间）<ul>
+<li>如果用户访问的网站为<code>www.a.com</code>，而后端的api域名为<code>api.a.com</code>。那么在<code>www.a.com</code>下，前端拿不到<code>api.a.com</code>的Cookie，也就无法完成双重Cookie认证。</li>
+<li>于是这个认证Cookie必须被种在<code>a.com</code>下，这样每个子域都可以访问。</li>
+<li>任何一个子域都可以修改<code>a.com</code>下的Cookie。</li>
+<li>某个子域名存在漏洞被XSS攻击（例如<code>upload.a.com</code>）。虽然这个子域下并没有什么值得窃取的信息。但攻击者修改了<code>a.com</code>下的Cookie。</li>
+<li>攻击者可以直接使用自己配置的Cookie，对XSS中招的用户再向<code>www.a.com</code>下，发起CSRF攻击。</li>
+</ul>
+</li>
+<li>Cookie中增加了额外的字段。</li>
+<li>如果有其他漏洞（例如XSS），攻击者可以注入Cookie，那么该防御方式失效。</li>
+<li>难以做到子域名的隔离。</li>
+<li>为了确保Cookie传输安全，采用这种防御方式的最好确保用整站HTTPS的方式，如果还没切HTTPS的使用这种方式也会有风险。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Samesite-Cookie属性"><a href="#Samesite-Cookie属性" class="headerlink" title="Samesite Cookie属性"></a>Samesite Cookie属性</h3><p>为了从源头上解决这个问题，Google起草了一份草案来改进HTTP协议，那就是为Set-Cookie响应头新增Samesite属性。</p>
+<p>它用来标明这个 Cookie是个“同站 Cookie”，<strong>同站Cookie只能作为第一方Cookie</strong>，不能作为第三方Cookie，Samesite 有两个属性值，分别是 Strict 和 Lax。</p>
+<h4 id="Samesite-Strict"><a href="#Samesite-Strict" class="headerlink" title="Samesite=Strict"></a>Samesite=Strict</h4><p>这种称为严格模式，表明这个 Cookie 在任何情况下都不可能作为第三方 Cookie，绝无例外。</p>
+<h4 id="Samesite-Lax"><a href="#Samesite-Lax" class="headerlink" title="Samesite=Lax"></a>Samesite=Lax</h4><p>这种称为宽松模式，比 Strict 放宽了点限制：假如这个请求是这种请求：改变了当前页面或者打开了新页面，且同时是个GET请求，则这个Cookie可以作为第三方Cookie。</p>
+<h4 id="eg"><a href="#eg" class="headerlink" title="eg"></a>eg</h4><p><code>Set-Cookie: foo=1; Samesite=Strict</code></p>
+<p><code>Set-Cookie: bar=2; Samesite=Lax</code></p>
+<p><code>Set-Cookie: baz=3</code></p>
+<p>我们在 a.com 下发起对 b.com 的任意请求，foo 这个 Cookie 都不会被包含在 Cookie 请求头中。</p>
+<p>当用户从 a.com 点击链接进入 b.com 时，foo 这个 Cookie 不会被包含在 Cookie 请求头中，但 bar 和 baz 会，也就是说用户在不同网站之间通过链接跳转是不受影响了。但假如这个请求是从 a.com 发起的对 b.com 的异步请求，或者页面跳转是通过表单的 post 提交触发的，则bar也不会发送。</p>
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h4><p>Samesite的兼容性不是很好，现阶段除了从新版Chrome和Firefox支持以外，Safari以及iOS Safari都还不支持，现阶段看来暂时还不能普及。</p>
+<p>而且，SamesiteCookie目前有一个致命的缺陷：不支持子域。例如，种在topic.a.com下的Cookie，并不能使用a.com下种植的SamesiteCookie。这就导致了当我们网站有多个子域名时，不能使用SamesiteCookie在主域名存储用户登录信息。每个子域名都需要用户重新登录一次。</p>
+<h3 id="防止网站被利用"><a href="#防止网站被利用" class="headerlink" title="防止网站被利用"></a>防止网站被利用</h3><p>CSRF的攻击可以来自：</p>
+<ul>
+<li>攻击者自己的网站。</li>
+<li>有文件上传漏洞的网站。</li>
+<li>第三方论坛等用户内容。</li>
+<li>被攻击网站自己的评论功能等。</li>
+</ul>
+<p>如何防止自己的网站被利用成为攻击的源头呢？</p>
+<ul>
+<li>严格管理所有的上传接口，防止任何预期之外的上传内容（例如HTML）。</li>
+<li>添加Header <code>X-Content-Type-Options: nosniff</code> 防止黑客上传HTML内容的资源（例如图片）被解析为网页。</li>
+<li>对于用户上传的图片，进行转存或者校验。不要直接使用用户填写的图片链接。</li>
+<li>当前用户打开其他用户填写的链接时，需告知风险（这也是很多论坛不允许直接在内容中发布外域链接的原因之一，不仅仅是为了用户留存，也有安全考虑）。</li>
+</ul>
+<h3 id="其他方式"><a href="#其他方式" class="headerlink" title="其他方式"></a>其他方式</h3><h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>CSRFTester。</p>
+<p>测试原理：使用代理抓取我们在浏览器中访问过的所有的连接以及所有的表单等信息，通过在CSRFTester中修改相应的表单等信息，重新提交，相当于一次伪造客户端请求，如果修改后的测试请求成功被网站服务器接受，则说明存在CSRF漏洞。</p>
+<h4 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h4><p>CSRF特征</p>
+<ul>
+<li>跨域请求。</li>
+<li>GET类型请求Header的MIME类型大概率为图片，而实际返回Header的MIME类型为Text、JSON、HTML。</li>
+</ul>
+<p>在网站的代理层监控所有的接口请求，如果请求符合上面的特征，就可以认为请求有CSRF攻击嫌疑。</p>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>CSRF自动防御策略：同源检测（Origin 和 Referer 验证）。</li>
+<li>CSRF主动防御措施：Token验证 或者 双重Cookie验证 以及配合Samesite Cookie。</li>
+<li>保证页面的幂等性，后端接口不要在GET页面中做用户操作。</li>
+</ul>
 
     </div>
 
@@ -407,7 +596,10 @@
     <a href="/2020/03/15/%E3%80%90%E9%9D%A2%E7%BB%8F%E3%80%91%E5%AD%97%E8%8A%82%E7%AC%94%E8%AF%95/" rel="prev" title="【面经】字节笔试">
       <i class="fa fa-chevron-left"></i> 【面经】字节笔试
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/19/%E3%80%90%E6%97%A5%E8%AE%B0%E3%80%912020-03-19/" rel="next" title="【日记】2020-03-19">
+      【日记】2020-03-19 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -467,7 +659,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#XSS"><span class="nav-number">1.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MDN术语解释"><span class="nav-number">1.1.</span> <span class="nav-text">MDN术语解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">1.2.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预防"><span class="nav-number">1.3.</span> <span class="nav-text">预防</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入过滤"><span class="nav-number">1.3.1.</span> <span class="nav-text">输入过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预防存储型和反射型-XSS-攻击"><span class="nav-number">1.3.2.</span> <span class="nav-text">预防存储型和反射型 XSS 攻击</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dom型"><span class="nav-number">1.3.3.</span> <span class="nav-text">Dom型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的"><span class="nav-number">1.3.4.</span> <span class="nav-text">其他的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测XSS"><span class="nav-number">1.4.</span> <span class="nav-text">检测XSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#迷思"><span class="nav-number">1.5.1.</span> <span class="nav-text">迷思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体思想"><span class="nav-number">1.5.2.</span> <span class="nav-text">总体思想</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#XSS"><span class="nav-number">1.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MDN术语解释"><span class="nav-number">1.1.</span> <span class="nav-text">MDN术语解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">1.2.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预防"><span class="nav-number">1.3.</span> <span class="nav-text">预防</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入过滤"><span class="nav-number">1.3.1.</span> <span class="nav-text">输入过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#预防存储型和反射型-XSS-攻击"><span class="nav-number">1.3.2.</span> <span class="nav-text">预防存储型和反射型 XSS 攻击</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dom型"><span class="nav-number">1.3.3.</span> <span class="nav-text">Dom型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSP"><span class="nav-number">1.3.4.</span> <span class="nav-text">CSP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#启用"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">启用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#限制选项"><span class="nav-number">1.3.4.2.</span> <span class="nav-text">限制选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选项值"><span class="nav-number">1.3.4.3.</span> <span class="nav-text">选项值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#script-src的特殊值"><span class="nav-number">1.3.4.4.</span> <span class="nav-text">script-src的特殊值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">1.3.4.5.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他的"><span class="nav-number">1.3.5.</span> <span class="nav-text">其他的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测XSS"><span class="nav-number">1.4.</span> <span class="nav-text">检测XSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#迷思"><span class="nav-number">1.5.1.</span> <span class="nav-text">迷思</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体思想"><span class="nav-number">1.5.2.</span> <span class="nav-text">总体思想</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CSRF"><span class="nav-number">2.</span> <span class="nav-text">CSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Wiki"><span class="nav-number">2.1.</span> <span class="nav-text">Wiki</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#攻击方法"><span class="nav-number">2.2.</span> <span class="nav-text">攻击方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">2.3.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防护"><span class="nav-number">2.4.</span> <span class="nav-text">防护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#同源检测"><span class="nav-number">2.4.1.</span> <span class="nav-text">同源检测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分布式校验"><span class="nav-number">2.4.1.1.</span> <span class="nav-text">分布式校验</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结-1"><span class="nav-number">2.4.1.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双重Cookie"><span class="nav-number">2.4.2.</span> <span class="nav-text">双重Cookie</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#流程"><span class="nav-number">2.4.2.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#优势与劣势"><span class="nav-number">2.4.2.2.</span> <span class="nav-text">优势与劣势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Samesite-Cookie属性"><span class="nav-number">2.4.3.</span> <span class="nav-text">Samesite Cookie属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Samesite-Strict"><span class="nav-number">2.4.3.1.</span> <span class="nav-text">Samesite&#x3D;Strict</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Samesite-Lax"><span class="nav-number">2.4.3.2.</span> <span class="nav-text">Samesite&#x3D;Lax</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#eg"><span class="nav-number">2.4.3.3.</span> <span class="nav-text">eg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结-2"><span class="nav-number">2.4.3.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防止网站被利用"><span class="nav-number">2.4.4.</span> <span class="nav-text">防止网站被利用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他方式"><span class="nav-number">2.4.5.</span> <span class="nav-text">其他方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#测试"><span class="nav-number">2.4.5.1.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监控"><span class="nav-number">2.4.5.2.</span> <span class="nav-text">监控</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-3"><span class="nav-number">2.4.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -481,7 +673,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

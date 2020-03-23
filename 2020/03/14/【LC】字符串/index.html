@@ -28,7 +28,7 @@
 <meta property="og:description" content="lc提高班1期Week5  by  雪菜大佬">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-03-14T08:50:38.536Z">
-<meta property="article:modified_time" content="2020-03-17T05:27:24.161Z">
+<meta property="article:modified_time" content="2020-03-22T02:23:53.226Z">
 <meta property="article:author" content="Miss FF">
 <meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
 <meta name="twitter:card" content="summary">
@@ -180,7 +180,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-17 13:27:24" itemprop="dateModified" datetime="2020-03-17T13:27:24+08:00">2020-03-17</time>
+                <time title="Modified: 2020-03-22 10:23:53" itemprop="dateModified" datetime="2020-03-22T10:23:53+08:00">2020-03-22</time>
               </span>
 
           
@@ -252,14 +252,58 @@
 <li><p>我的为什么慢：每次不一定能找到回文。</p>
 </li>
 </ul>
-<h2 id="273"><a href="#273" class="headerlink" title="273"></a>273</h2><ul>
-<li>6</li>
-<li>3</li>
-<li>166</li>
-<li>298</li>
-<li>131</li>
-<li>227</li>
-<li>30</li>
+<h2 id="273"><a href="#273" class="headerlink" title="273"></a>273</h2><p>把整数转化为对应的英语。</p>
+<ul>
+<li><p>赞：踩大概1:4的hard，绝妙</p>
+</li>
+<li><p>就是耐心一点，然后搞清楚英语是怎么写的，递归去做就行。</p>
+</li>
+<li><pre><code class="c++"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> {</span>
+<span class="keyword">public</span>:
+    <span class="function"><span class="keyword">static</span> <span class="built_in">string</span> <span class="title">numberToWords</span><span class="params">(<span class="keyword">int</span> n)</span> </span>{
+        <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="string">"Zero"</span>;
+        <span class="keyword">else</span> <span class="keyword">return</span> int_string(n).substr(<span class="number">1</span>);
+    }
+<span class="keyword">private</span>:
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> * <span class="keyword">const</span> below_20[];
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> * <span class="keyword">const</span> below_100[];
+    <span class="function"><span class="keyword">static</span> <span class="built_in">string</span> <span class="title">int_string</span><span class="params">(<span class="keyword">int</span> n)</span> </span>{
+        <span class="keyword">if</span>(n &gt;= <span class="number">1000000000</span>)   <span class="keyword">return</span> int_string(n / <span class="number">1000000000</span>) + <span class="string">" Billion"</span> + int_string(n - <span class="number">1000000000</span> * (n / <span class="number">1000000000</span>));
+        <span class="keyword">else</span> <span class="keyword">if</span>(n &gt;= <span class="number">1000000</span>) <span class="keyword">return</span> int_string(n / <span class="number">1000000</span>) + <span class="string">" Million"</span> + int_string(n - <span class="number">1000000</span> * (n / <span class="number">1000000</span>));
+        <span class="keyword">else</span> <span class="keyword">if</span>(n &gt;= <span class="number">1000</span>)    <span class="keyword">return</span> int_string(n / <span class="number">1000</span>) + <span class="string">" Thousand"</span> + int_string(n - <span class="number">1000</span> * (n / <span class="number">1000</span>));
+        <span class="keyword">else</span> <span class="keyword">if</span>(n &gt;= <span class="number">100</span>)     <span class="keyword">return</span> int_string(n / <span class="number">100</span>) + <span class="string">" Hundred"</span> + int_string(n - <span class="number">100</span> * (n / <span class="number">100</span>));
+        <span class="keyword">else</span> <span class="keyword">if</span>(n &gt;= <span class="number">20</span>)      <span class="keyword">return</span> <span class="built_in">string</span>(<span class="string">" "</span>) + below_100[n / <span class="number">10</span> - <span class="number">2</span>] + int_string(n - <span class="number">10</span> * (n / <span class="number">10</span>));
+        <span class="keyword">else</span> <span class="keyword">if</span>(n &gt;= <span class="number">1</span>)       <span class="keyword">return</span> <span class="built_in">string</span>(<span class="string">" "</span>) + below_20[n - <span class="number">1</span>];
+        <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">""</span>;
+        }
+    }
+};
+
+<span class="keyword">const</span> <span class="keyword">char</span> * <span class="keyword">const</span> Solution::below_20[] =  {<span class="string">"One"</span>, <span class="string">"Two"</span>, <span class="string">"Three"</span>, <span class="string">"Four"</span>,<span class="string">"Five"</span>,<span class="string">"Six"</span>,<span class="string">"Seven"</span>,<span class="string">"Eight"</span>,<span class="string">"Nine"</span>,<span class="string">"Ten"</span>, <span class="string">"Eleven"</span>,<span class="string">"Twelve"</span>,<span class="string">"Thirteen"</span>,<span class="string">"Fourteen"</span>,<span class="string">"Fifteen"</span>,<span class="string">"Sixteen"</span>,<span class="string">"Seventeen"</span>,<span class="string">"Eighteen"</span>,<span class="string">"Nineteen"</span>};
+<span class="keyword">const</span> <span class="keyword">char</span> * <span class="keyword">const</span> Solution::below_100[] = {<span class="string">"Twenty"</span>, <span class="string">"Thirty"</span>, <span class="string">"Forty"</span>, <span class="string">"Fifty"</span>, <span class="string">"Sixty"</span>, <span class="string">"Seventy"</span>, <span class="string">"Eighty"</span>, <span class="string">"Ninety"</span>};
+&lt;!--￼<span class="number">4</span>--&gt;
+
+-   改良↑，优雅的写法：
+
+&lt;!--￼<span class="number">5</span>--&gt;
+
+-   找规律，按照奇偶长度算出来每行应该在的位置。写几个就行，这里不得不说一句：君君可以的
+
+&lt;!--￼<span class="number">6</span>--&gt;</code></pre>
+</li>
+<li></li>
+<li><p>3</p>
+</li>
+<li><p>166</p>
+</li>
+<li><p>298</p>
+</li>
+<li><p>131</p>
+</li>
+<li><p>227</p>
+</li>
+<li><p>30</p>
+</li>
 </ul>
 
     </div>
@@ -356,7 +400,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

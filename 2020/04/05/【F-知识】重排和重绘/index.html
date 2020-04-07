@@ -28,7 +28,7 @@
 <meta property="og:description" content="亲娘嘞，影响性能呀！【邢育森皱眉.jpg】 “重绘”不一定需要”重排”，“重排”必然导致”重绘”。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-05T15:33:48.581Z">
-<meta property="article:modified_time" content="2020-04-05T16:02:57.646Z">
+<meta property="article:modified_time" content="2020-04-07T15:11:58.524Z">
 <meta property="article:author" content="Miss FF">
 <meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
 <meta name="twitter:card" content="summary">
@@ -180,7 +180,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-06 00:02:57" itemprop="dateModified" datetime="2020-04-06T00:02:57+08:00">2020-04-06</time>
+                <time title="Modified: 2020-04-07 23:11:58" itemprop="dateModified" datetime="2020-04-07T23:11:58+08:00">2020-04-07</time>
               </span>
 
           
@@ -208,7 +208,69 @@
 <p>前面3步相对快，4、5比较耗时，加起来叫渲染。（怪不得vue把dom移走劫持一下不是很慢）</p>
 <p>网页生成的时候，至少会渲染一次。用户访问的过程中，还会不断重新渲染。</p>
 <h2 id="重排-amp-重绘"><a href="#重排-amp-重绘" class="headerlink" title="重排 &amp; 重绘"></a>重排 &amp; 重绘</h2><p><strong>重新渲染，就需要重新生成布局和重新绘制。前者叫做”重排”（reflow），后者叫做”重绘”（repaint）。</strong></p>
-
+<p>可能触发：</p>
+<ul>
+<li>修改DOM</li>
+<li>修改样式表</li>
+<li>用户事件（比如鼠标悬停、页面滚动、输入框键入文字、改变窗口大小等等）</li>
+</ul>
+<h1 id="性能调优"><a href="#性能调优" class="headerlink" title="性能调优"></a>性能调优</h1><h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><ol>
+<li>浏览器会尽量把样式排在一起一次性操作完了</li>
+<li>从性能角度考虑，尽量不要把读操作和写操作，放在一个语句里面。<ul>
+<li>就是应用上面的变动达成下一条语句，就是写完立刻读，那就得先完成一次重排重绘</li>
+</ul>
+</li>
+<li>样式的写操作之后，如果有下面这些属性的读操作，都会引发浏览器立即重新渲染。<ul>
+<li><code>offsetTop/offsetLeft/offsetWidth/offsetHeight</code></li>
+<li><code>scrollTop/scrollLeft/scrollWidth/scrollHeight</code></li>
+<li><code>clientTop/clientLeft/clientWidth/clientHeight</code></li>
+<li><code>getComputedStyle()</code></li>
+</ul>
+</li>
+<li>一般的规则：<ul>
+<li>样式表越简单，重排和重绘就越快。</li>
+<li>重排和重绘的DOM元素层级越高，成本就越高。</li>
+<li>table元素的重排和重绘成本，要高于div元素</li>
+</ul>
+</li>
+</ol>
+<h2 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h2><ol>
+<li>DOM 的多个读操作（或多个写操作），应该放在一起。不要两个读操作之间，加入一个写操作。</li>
+<li>第二条，如果某个样式是通过重排得到的，那么最好缓存结果。避免下一次用到的时候，浏览器又要重排。</li>
+<li>第三条，不要一条条地改变样式，而要通过改变class，或者csstext属性，一次性地改变样式。<ul>
+<li>csstext：DOM元素的一个属性对象，批量内联属性</li>
+<li>改变csstest会覆盖之前的×（毕竟是内联样式了）</li>
+<li>优先级高于单独的style.xxx</li>
+</ul>
+</li>
+<li>【？？？？？】尽量使用离线DOM，而不是真实的网面DOM，来改变元素样式。比如，操作Document Fragment对象，完成后再把这个对象加入DOM。再比如，使用 cloneNode() 方法，在克隆的节点上进行操作，然后再用克隆的节点替换原始节点。<ul>
+<li>这条看不懂，感觉上是一个DOM的改动先搞个副本，全整完再替换进去</li>
+<li>说白了就是偷懒，你也不知道哪些语句或者顺序会引起重绘重排，就干脆虚拟操作（移除，不触发）</li>
+</ul>
+</li>
+<li>先将元素设为<code>display: none</code>（需要1次重排和重绘），然后对这个节点进行100次操作，最后再恢复显示（需要1次重排和重绘）。这样一来，你就用两次重新渲染，取代了可能高达100次的重新渲染。<ul>
+<li>少换多</li>
+<li>也有点移除，不触发那味儿</li>
+</ul>
+</li>
+<li>position属性为<code>absolute</code>或<code>fixed</code>的元素，重排的开销会比较小，因为不用考虑它对其他元素的影响。<ul>
+<li>和那个DOM层级高开销大有异曲同工之妙</li>
+</ul>
+</li>
+<li>只在必要的时候，才将元素的display属性为可见，因为不可见的元素不影响重排和重绘。另外，<code>visibility : hidden</code>的元素只对重绘有影响，不影响重排。<ul>
+<li>还是那句老话：移除，不触发</li>
+</ul>
+</li>
+<li>【？？？】使用虚拟DOM的脚本库，比如React等。<ul>
+<li>vue呢？</li>
+</ul>
+</li>
+<li>使用<code>window.requestAnimationFrame()</code>、<code>window.requestIdleCallback()</code> 这两个方法调节重新渲染。<ul>
+<li>RAF！似李！！</li>
+</ul>
+</li>
+</ol>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
     </div>
 
     
@@ -289,7 +351,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#是什么？"><span class="nav-number">1.</span> <span class="nav-text">是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网页生成的过程"><span class="nav-number">1.1.</span> <span class="nav-text">网页生成的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重排-amp-重绘"><span class="nav-number">1.2.</span> <span class="nav-text">重排 &amp; 重绘</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#是什么？"><span class="nav-number">1.</span> <span class="nav-text">是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网页生成的过程"><span class="nav-number">1.1.</span> <span class="nav-text">网页生成的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重排-amp-重绘"><span class="nav-number">1.2.</span> <span class="nav-text">重排 &amp; 重绘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能调优"><span class="nav-number">2.</span> <span class="nav-text">性能调优</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#影响"><span class="nav-number">2.1.</span> <span class="nav-text">影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调优"><span class="nav-number">2.2.</span> <span class="nav-text">调优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.3.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -303,7 +365,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

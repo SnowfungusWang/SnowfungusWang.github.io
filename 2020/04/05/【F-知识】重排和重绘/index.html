@@ -28,7 +28,7 @@
 <meta property="og:description" content="亲娘嘞，影响性能呀！【邢育森皱眉.jpg】 “重绘”不一定需要”重排”，“重排”必然导致”重绘”。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-05T15:33:48.581Z">
-<meta property="article:modified_time" content="2020-04-07T15:11:58.524Z">
+<meta property="article:modified_time" content="2020-04-08T03:34:19.098Z">
 <meta property="article:author" content="Miss FF">
 <meta property="article:tag" content="在读，探索中，垃圾前端，程序媛">
 <meta name="twitter:card" content="summary">
@@ -180,7 +180,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-07 23:11:58" itemprop="dateModified" datetime="2020-04-07T23:11:58+08:00">2020-04-07</time>
+                <time title="Modified: 2020-04-08 11:34:19" itemprop="dateModified" datetime="2020-04-08T11:34:19+08:00">2020-04-08</time>
               </span>
 
           
@@ -215,62 +215,183 @@
 <li>用户事件（比如鼠标悬停、页面滚动、输入框键入文字、改变窗口大小等等）</li>
 </ul>
 <h1 id="性能调优"><a href="#性能调优" class="headerlink" title="性能调优"></a>性能调优</h1><h2 id="影响"><a href="#影响" class="headerlink" title="影响"></a>影响</h2><ol>
-<li>浏览器会尽量把样式排在一起一次性操作完了</li>
-<li>从性能角度考虑，尽量不要把读操作和写操作，放在一个语句里面。<ul>
+<li><p>浏览器会尽量把样式排在一起一次性操作完了</p>
+</li>
+<li><p>从性能角度考虑，尽量不要把读操作和写操作，放在一个语句里面。</p>
+<ul>
 <li>就是应用上面的变动达成下一条语句，就是写完立刻读，那就得先完成一次重排重绘</li>
 </ul>
 </li>
-<li>样式的写操作之后，如果有下面这些属性的读操作，都会引发浏览器立即重新渲染。<ul>
+<li><p>样式的写操作之后，如果有下面这些属性的读操作，都会引发浏览器立即重新渲染。</p>
+<ul>
 <li><code>offsetTop/offsetLeft/offsetWidth/offsetHeight</code></li>
 <li><code>scrollTop/scrollLeft/scrollWidth/scrollHeight</code></li>
 <li><code>clientTop/clientLeft/clientWidth/clientHeight</code></li>
 <li><code>getComputedStyle()</code></li>
 </ul>
 </li>
-<li>一般的规则：<ul>
+<li><p>一个讨论：仅读取会重绘吗</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bad</span></span><br><span class="line">div.style.left = div.offsetLeft + <span class="number">10</span> + <span class="string">"px"</span>; <span class="comment">//offsetLeft重绘一次</span></span><br><span class="line">div.style.top = div.offsetTop + <span class="number">10</span> + <span class="string">"px"</span>; <span class="comment">//offsetTop之前重排一次，再重绘一次</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// good</span></span><br><span class="line"><span class="keyword">var</span> left = div.offsetLeft; <span class="comment">//重绘一次</span></span><br><span class="line"><span class="keyword">var</span> top = div.offsetTop; <span class="comment">//重绘一次</span></span><br><span class="line">div.style.left = left + <span class="number">10</span> + <span class="string">"px"</span>;</span><br><span class="line">div.style.top = top + <span class="number">10</span> + <span class="string">"px"</span>;</span><br><span class="line"></span><br><span class="line">bad重排<span class="number">1</span>次重绘两次</span><br><span class="line">good重排<span class="number">0</span>次重绘两次</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>一般的规则：</p>
+<ul>
 <li>样式表越简单，重排和重绘就越快。</li>
 <li>重排和重绘的DOM元素层级越高，成本就越高。</li>
 <li>table元素的重排和重绘成本，要高于div元素</li>
 </ul>
 </li>
 </ol>
+<h2 id="触发"><a href="#触发" class="headerlink" title="触发"></a>触发</h2><ol>
+<li><p>重排：几何因素。原理是一样的，都为求一个“即时性”和“准确性”</p>
+<ul>
+<li><p>页面第一次渲染：在页面发生首次渲染的时候，所有组件都要进行首次布局，这是开销最大的一次重排。</p>
+</li>
+<li><p>浏览器窗口尺寸改变</p>
+</li>
+<li><p>元素位置和尺寸发生改变的时候</p>
+</li>
+<li><p>新增和删除可见元素</p>
+</li>
+<li><p>内容发生改变（文字数量或图片大小等等）</p>
+</li>
+<li><p>元素字体大小变化。</p>
+</li>
+<li><p>激活CSS伪类（例如：<code>:hover</code>）。</p>
+</li>
+<li><p>设置style属性 9.查询某些属性或调用某些方法。比如说：</p>
+<p><code>offsetTop、offsetLeft、 offsetWidth、offsetHeight、scrollTop、scrollLeft、scrollWidth、scrollHeight、clientTop、clientLeft、clientWidth、clientHeight</code></p>
+</li>
+<li><p>当调用<code>getComputedStyle</code>方法，或者IE里的<code>currentStyle</code>时，也会触发重排。</p>
+</li>
+</ul>
+</li>
+<li><p>重绘：</p>
+<ul>
+<li><code>vidibility</code>、<code>outline</code>、背景色等属性的改变</li>
+<li>重排之后</li>
+</ul>
+</li>
+</ol>
 <h2 id="调优"><a href="#调优" class="headerlink" title="调优"></a>调优</h2><ol>
-<li>DOM 的多个读操作（或多个写操作），应该放在一起。不要两个读操作之间，加入一个写操作。</li>
-<li>第二条，如果某个样式是通过重排得到的，那么最好缓存结果。避免下一次用到的时候，浏览器又要重排。</li>
-<li>第三条，不要一条条地改变样式，而要通过改变class，或者csstext属性，一次性地改变样式。<ul>
+<li><p>DOM 的多个读操作（或多个写操作），应该放在一起。不要两个读操作之间，加入一个写操作。</p>
+</li>
+<li><p>第二条，如果某个样式是通过重排得到的，那么最好缓存结果。避免下一次用到的时候，浏览器又要重排。</p>
+</li>
+<li><p>第三条，不要一条条地改变样式，而要通过改变class，或者csstext属性，一次性地改变样式。</p>
+<ul>
 <li>csstext：DOM元素的一个属性对象，批量内联属性</li>
 <li>改变csstest会覆盖之前的×（毕竟是内联样式了）</li>
 <li>优先级高于单独的style.xxx</li>
 </ul>
 </li>
-<li>【？？？？？】尽量使用离线DOM，而不是真实的网面DOM，来改变元素样式。比如，操作Document Fragment对象，完成后再把这个对象加入DOM。再比如，使用 cloneNode() 方法，在克隆的节点上进行操作，然后再用克隆的节点替换原始节点。<ul>
-<li>这条看不懂，感觉上是一个DOM的改动先搞个副本，全整完再替换进去</li>
-<li>说白了就是偷懒，你也不知道哪些语句或者顺序会引起重绘重排，就干脆虚拟操作（移除，不触发）</li>
+<li><p>【？？？？？】尽量使用离线DOM，而不是真实的网面DOM，来改变元素样式。比如，操作Document Fragment对象，完成后再把这个对象加入DOM。再比如，使用 cloneNode() 方法，在克隆的节点上进行操作，然后再用克隆的节点替换原始节点。</p>
+<ul>
+<li><p>Document Fragment：文档片段接口。表示一个没有父级文件的最小文档对象。作为一个轻量版的 <code>Document</code>，用于存储已排好版的或尚未打理好格式的 XML 片段。</p>
+</li>
+<li><p>感觉上是一个DOM的改动先搞个副本，全整完再替换进去</p>
+</li>
+<li><p>说白了就是偷懒，你也不知道哪些语句或者顺序会引起重绘重排，就干脆虚拟操作（移除，不触发）</p>
+</li>
 </ul>
 </li>
-<li>先将元素设为<code>display: none</code>（需要1次重排和重绘），然后对这个节点进行100次操作，最后再恢复显示（需要1次重排和重绘）。这样一来，你就用两次重新渲染，取代了可能高达100次的重新渲染。<ul>
+<li><p>先将元素设为<code>display: none</code>（需要1次重排和重绘），然后对这个节点进行100次操作，最后再恢复显示（需要1次重排和重绘）。这样一来，你就用两次重新渲染，取代了可能高达100次的重新渲染。</p>
+<ul>
 <li>少换多</li>
 <li>也有点移除，不触发那味儿</li>
 </ul>
 </li>
-<li>position属性为<code>absolute</code>或<code>fixed</code>的元素，重排的开销会比较小，因为不用考虑它对其他元素的影响。<ul>
+<li><p>position属性为<code>absolute</code>或<code>fixed</code>的元素，重排的开销会比较小，因为不用考虑它对其他元素的影响。</p>
+<ul>
 <li>和那个DOM层级高开销大有异曲同工之妙</li>
 </ul>
 </li>
-<li>只在必要的时候，才将元素的display属性为可见，因为不可见的元素不影响重排和重绘。另外，<code>visibility : hidden</code>的元素只对重绘有影响，不影响重排。<ul>
+<li><p>只在必要的时候，才将元素的display属性为可见，因为不可见的元素不影响重排和重绘。另外，<code>visibility : hidden</code>的元素只对重绘有影响，不影响重排。</p>
+<ul>
 <li>还是那句老话：移除，不触发</li>
 </ul>
 </li>
-<li>【？？？】使用虚拟DOM的脚本库，比如React等。<ul>
+<li><p>【？？？】使用虚拟DOM的脚本库，比如React等。</p>
+<ul>
 <li>vue呢？</li>
 </ul>
 </li>
-<li>使用<code>window.requestAnimationFrame()</code>、<code>window.requestIdleCallback()</code> 这两个方法调节重新渲染。<ul>
+<li><p>使用<code>window.requestAnimationFrame()</code>、<code>window.requestIdleCallback()</code> 这两个方法调节重新渲染。</p>
+<ul>
 <li>RAF！似李！！</li>
 </ul>
 </li>
+<li><p>GPU 硬件加速：应用 GPU 的图形性能对浏览器中的一些图形操作交给 GPU 来完成，因为 GPU 是专门为处理图形而设计，所以它在速度和能耗上更有效率。</p>
+<ul>
+<li>Canvas2D，布局合成</li>
+<li>CSS3转换（<code>transition</code>s）</li>
+<li>CSS3 3D变换（<code>transforms</code>）</li>
+<li>WebGL和视频(<code>video</code>)。</li>
+</ul>
+</li>
 </ol>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+<h1 id="刷新率与帧（动画）"><a href="#刷新率与帧（动画）" class="headerlink" title="刷新率与帧（动画）"></a>刷新率与帧（动画）</h1><h2 id="刷新率"><a href="#刷新率" class="headerlink" title="刷新率"></a>刷新率</h2><ol>
+<li>网页动画的每一帧都是重新渲染，相当于重新生成一张图片。</li>
+<li>刷新率：一秒之间能够完成多少次重新渲染。英文为FPS（frame per second）。<ul>
+<li>数值越大帧率越高越清晰</li>
+<li>60次重新渲染，就是60FPS</li>
+<li>一般要30~60FPS才会比较流畅</li>
+</ul>
+</li>
+<li>大多数显示器都是60HZ，为了与系统一致，以及节省电力，浏览器会自动按照这个频率，刷新动画（如果可以做到的话）。<ul>
+<li>一秒之内进行60次重新渲染，每次重新渲染的时间不能超过16.66毫秒。</li>
+</ul>
+</li>
+<li>想达到60帧的刷新率，就意味着JavaScript线程每个任务的耗时，必须少于16毫秒。一个解决办法是使用Web Worker，主线程只用于UI渲染，然后跟UI渲染不相干的任务，都放在Worker线程。</li>
+</ol>
+<h2 id="window-requestAnimationFrame"><a href="#window-requestAnimationFrame" class="headerlink" title="window.requestAnimationFrame()"></a><code>window.requestAnimationFrame()</code></h2><ol>
+<li><p>调节重新渲染，<strong>其中的代码会放到下一次重新渲染时执行</strong></p>
+</li>
+<li><p>可以使用<code>window.requestAnimationFrame()</code>，让读操作和写操作分离，把所有的写操作放到下一次重新渲染。</p>
+<blockquote>
+  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doubleHeight</span>(<span class="params">element</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> currentHeight = element.clientHeight;</span><br><span class="line">  <span class="built_in">window</span>.requestAnimationFrame(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    element.style.height = (currentHeight * <span class="number">2</span>) + <span class="string">'px'</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line">elements.forEach(doubleHeight);</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>例子</p>
+<ul>
+<li><p>页面滚动事件（scroll）的监听函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="built_in">window</span>).on(<span class="string">'scroll'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">window</span>.requestAnimationFrame(scrollHandler);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>网页动画</p>
+</li>
+<li><p>旋转</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rAF = <span class="built_in">window</span>.requestAnimationFrame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> degrees = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  div.style.transform = <span class="string">"rotate("</span> + degrees + <span class="string">"deg)"</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'updated to degrees '</span> + degrees);</span><br><span class="line">  degrees = degrees + <span class="number">1</span>;</span><br><span class="line">  rAF(update);</span><br><span class="line">&#125;</span><br><span class="line">rAF(update);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="window-requestIdleCallback"><a href="#window-requestIdleCallback" class="headerlink" title="window.requestIdleCallback()"></a><code>window.requestIdleCallback()</code></h2><ol>
+<li>指定只有当一帧的末尾有空闲时间，才会执行回调函数。<ul>
+<li>只有当前帧的运行时间小于16.66ms时，回调函数才会执行。否则，就推迟到下一帧，如果下一帧也没有空闲时间，就推迟到下下一帧，以此类推。</li>
+</ul>
+</li>
+<li>还可以接受第二个参数，表示指定的毫秒数。如果在指定 的这段时间之内，每一帧都没有空闲时间，那回调函数将会强制执行。<ul>
+<li>最迟xx毫秒之后执行</li>
+</ul>
+</li>
+<li>回调函数可以接受deadline对象作为参数，有一个方法一个属性<ul>
+<li><code>timeRemaining()</code> 方法：返回当前帧还剩余的毫秒。<ul>
+<li>这个方法只能读，不能写，而且会动态更新。</li>
+<li>可以不断检查这个属性，如果还有剩余时间的话，就不断执行某些任务。一旦这个属性等于0，就把任务分配到下一轮</li>
+</ul>
+</li>
+<li><code>didTimeout</code>属性：返回一个布尔值，表示指定的时间是否过期。<ul>
+<li>如果回调函数由于指定时间过期而触发，那么<ul>
+<li>timeRemaining方法返回0</li>
+<li>didTimeout 属性等于 true</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
     </div>
 
     
@@ -351,7 +472,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#是什么？"><span class="nav-number">1.</span> <span class="nav-text">是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网页生成的过程"><span class="nav-number">1.1.</span> <span class="nav-text">网页生成的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重排-amp-重绘"><span class="nav-number">1.2.</span> <span class="nav-text">重排 &amp; 重绘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能调优"><span class="nav-number">2.</span> <span class="nav-text">性能调优</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#影响"><span class="nav-number">2.1.</span> <span class="nav-text">影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调优"><span class="nav-number">2.2.</span> <span class="nav-text">调优</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">2.3.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#是什么？"><span class="nav-number">1.</span> <span class="nav-text">是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网页生成的过程"><span class="nav-number">1.1.</span> <span class="nav-text">网页生成的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重排-amp-重绘"><span class="nav-number">1.2.</span> <span class="nav-text">重排 &amp; 重绘</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能调优"><span class="nav-number">2.</span> <span class="nav-text">性能调优</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#影响"><span class="nav-number">2.1.</span> <span class="nav-text">影响</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#触发"><span class="nav-number">2.2.</span> <span class="nav-text">触发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调优"><span class="nav-number">2.3.</span> <span class="nav-text">调优</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#刷新率与帧（动画）"><span class="nav-number">3.</span> <span class="nav-text">刷新率与帧（动画）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#刷新率"><span class="nav-number">3.1.</span> <span class="nav-text">刷新率</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window-requestAnimationFrame"><span class="nav-number">3.2.</span> <span class="nav-text">window.requestAnimationFrame()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#window-requestIdleCallback"><span class="nav-number">3.3.</span> <span class="nav-text">window.requestIdleCallback()</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -365,7 +486,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
